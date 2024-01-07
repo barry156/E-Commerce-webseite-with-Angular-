@@ -7,24 +7,36 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 
-    class Program
+class Program
+{
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        IShopReader shopReaderObj = new ShopReader();
+
+        List<Customer> customerList = shopReaderObj.ReadAllCustomer();
+
+        foreach (var customer in customerList)
         {
-            IShopReader shopReaderObj = new ShopReader();
+            Console.WriteLine($"ID: {customer.ID}, Name: {customer.Name}, Email: {customer.Email}, Bestellungen: {customer.Bestellungen}");
+        }
 
-            List<Customer> customerList = shopReaderObj.ReadAllCustomer();
+        List<Article> articleList = shopReaderObj.ReadAllArticles();
 
-            foreach (var customer in customerList)
-            {
-                Console.WriteLine($"ID: {customer.ID}, Name: {customer.Name}, Email: {customer.Email}, Bestellungen: {customer.Bestellungen}");
-            }
+        foreach (var article in articleList)
+        {
+            Console.WriteLine($"ID: {article.ID}, Name: {article.Name}, Preis: {article.Preis}");
+        }
 
-            List<Article> articleList = shopReaderObj.ReadAllArticles();
+        List <Order> orderList = shopReaderObj.ReadAllOrders();
 
-            foreach (var article in articleList)
+        foreach (var order in orderList)
+        {
+            Console.WriteLine($"ID: {order.ID}, Payd: {order.Payd}, Preis: {order.TotalPrice}");
+            List<Article> articleForOrderList = order.ArticleList;
+            foreach (var article in articleForOrderList)
             {
                 Console.WriteLine($"ID: {article.ID}, Name: {article.Name}, Preis: {article.Preis}");
             }
         }
     }
+}
