@@ -51,4 +51,39 @@ class ShopReader : IShopReader{
         return customerList;
         //return new List<Customer>();
     }
+
+    public List<Article> ReadAllArticles()
+    {
+        List<Article> articleList = new List<Article>();
+
+        try
+        {
+            connection.Open();
+
+            SqlCommand command      = new SqlCommand("SELECT * FROM Artikel", connection);
+            SqlDataReader reader    = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Article article = new Article
+                {
+                    ID      = Convert.ToInt32(reader["ID"]),
+                    Name    = reader["Name"].ToString(),
+                    Preis   = Convert.ToDecimal(reader["Preis"])
+                };
+                articleList.Add(article);
+            }
+            connection.Close();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Verbindungsaufbau: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+        }
+        return articleList;
+    }
+
 }

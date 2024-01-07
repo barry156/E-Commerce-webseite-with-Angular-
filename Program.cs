@@ -20,42 +20,11 @@ using System.Collections.Generic;
                 Console.WriteLine($"ID: {customer.ID}, Name: {customer.Name}, Email: {customer.Email}, Bestellungen: {customer.Bestellungen}");
             }
 
-            /*
-            // Verbindungszeichenfolge zur lokalen SQL Server-Datenbank
-            string connectionString = "Data Source=DESKTOP-ODAGOGJ\\SQLEXPRESS;Initial Catalog=ShopDB;User ID=shopUser;Password=123456789;";
+            List<Article> articleList = shopReaderObj.ReadAllArticles();
 
-            // SQL-Abfrage (optional)
-            string query = "SELECT * FROM kunden";
-
-            // Verbindung erstellen
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            foreach (var article in articleList)
             {
-                try
-                {
-                    // Verbindung öffnen
-                    connection.Open();
-                    
-                    // Jetzt können Sie SQL-Abfragen ausführen, z.B. mit SqlCommand
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        Console.WriteLine(command);
-                        // Beispiel: Ausführen einer Abfrage und Lesen der Ergebnisse
-                        SqlDataReader reader = command.ExecuteReader();
-                        Console.WriteLine(reader);
-                        while (reader.Read())
-                        {
-                            // Hier können Sie auf die Daten zugreifen, z.B. reader["Spaltenname"]
-                            Console.WriteLine(reader["name"]);
-                        }
-                    }
-                    
-                    Console.WriteLine("Connection open");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Fehler beim Verbindungsaufbau: " + ex.Message);
-                }
+                Console.WriteLine($"ID: {article.ID}, Name: {article.Name}, Preis: {article.Preis}");
             }
-            */
         }
     }

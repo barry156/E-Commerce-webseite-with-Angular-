@@ -9,4 +9,5 @@ using System.Collections.Generic;
 public interface IShopReader
 {
     List<Customer> ReadAllCustomer();
+    List<Article> ReadAllArticles();
 }
