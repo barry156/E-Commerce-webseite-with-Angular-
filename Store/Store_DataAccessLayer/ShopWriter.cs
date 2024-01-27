@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using System.Data;
 
 class ShopWriter : IShopWriter
@@ -18,7 +12,7 @@ class ShopWriter : IShopWriter
     }
 
     // Artikel
-    public int AddArticle(Article article) 
+    public int AddArticle(Article article)
     {
         try
         {
@@ -34,7 +28,7 @@ class ShopWriter : IShopWriter
 
             connection.Close();
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
             Console.WriteLine("Fehler beim Hinzufügen des Artikels: " + e.Message);
             if (connection != null && connection.State == ConnectionState.Open)
@@ -145,7 +139,7 @@ class ShopWriter : IShopWriter
     }
 
     // Bestellung
-    public int ConnectArticleAndOrder(int articleId, int orderId) 
+    public int ConnectArticleAndOrder(int articleId, int orderId)
     {
         try
         {
@@ -195,7 +189,7 @@ class ShopWriter : IShopWriter
                 int articleId = article.ID;
                 int orderId = order.ID;
                 int i = ConnectArticleAndOrder(articleId, orderId);
-                if (i == 0) 
+                if (i == 0)
                 {
                     connectionProblems = true;
                 }
@@ -210,7 +204,7 @@ class ShopWriter : IShopWriter
             }
             return 0;
         }
-        if (connectionProblems) 
+        if (connectionProblems)
         {
             return 0;
         }
@@ -220,7 +214,7 @@ class ShopWriter : IShopWriter
         }
     }
 
-    public int RemoveArticleAndOrderConnection(int orderId) 
+    public int RemoveArticleAndOrderConnection(int orderId)
     {
         int rowsAffected = -1;
         try
