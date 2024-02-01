@@ -1,5 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using System.Data.SqlClient;
 using System.Data;
+using Newtonsoft.Json;
 
 class ShopWriter : IShopWriter
 {
@@ -12,7 +19,7 @@ class ShopWriter : IShopWriter
     }
 
     // Artikel
-    public int AddArticle(Article article)
+    public int AddArticle(Article article) 
     {
         try
         {
@@ -28,7 +35,7 @@ class ShopWriter : IShopWriter
 
             connection.Close();
         }
-        catch (Exception e)
+        catch (Exception e) 
         {
             Console.WriteLine("Fehler beim Hinzufügen des Artikels: " + e.Message);
             if (connection != null && connection.State == ConnectionState.Open)
@@ -139,7 +146,7 @@ class ShopWriter : IShopWriter
     }
 
     // Bestellung
-    public int ConnectArticleAndOrder(int articleId, int orderId)
+    public int ConnectArticleAndOrder(int articleId, int orderId) 
     {
         try
         {
@@ -166,30 +173,51 @@ class ShopWriter : IShopWriter
         return 1;
     }
 
-    public int AddOrder(Order order)
+    public int AddOrder(string orderJson)
     {
+        /*
+         {
+          "iD": 1,
+          "payd": true,
+          "totalPrice": 99.99,
+          "articleList": [
+            {
+              "ID": 1,
+              "Name": "Product A",
+              "Preis": 19.99
+            },
+            {
+              "ID": 2,
+              "Name": "Product B",
+              "Preis": 29.99
+            }
+          ]
+        }
+         */
         bool connectionProblems = false;
         try
         {
+            dynamic orderData = JsonConvert.DeserializeObject(orderJson);
+
             connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO Bestellungen (ID, Bezahlt, Gesamtpreis) VALUES (@ID, @Bezahlt, @Gesamtpreis)", connection);
-            command.Parameters.AddWithValue("@ID", order.ID);
-            command.Parameters.AddWithValue("@Bezahlt", order.Payd);
-            command.Parameters.AddWithValue("@Gesamtpreis", order.TotalPrice);
+            command.Parameters.AddWithValue("@ID", orderData.ID);
+            command.Parameters.AddWithValue("@Bezahlt", orderData.Payd);
+            command.Parameters.AddWithValue("@Gesamtpreis", orderData.TotalPrice);
 
             command.ExecuteNonQuery();
-            Console.WriteLine($"Bestellung mit ID {order.ID} erfolgreich angelegt.");
+            Console.WriteLine($"Bestellung mit ID {orderData.ID} erfolgreich angelegt.");
 
             connection.Close();
 
-            List<Article> articleListForOrder = order.ArticleList;
-            foreach (var article in articleListForOrder)
+            //List<Article> articleListForOrder = order.ArticleList;
+            foreach (var articleData in orderData.ArticleList)
             {
-                int articleId = article.ID;
-                int orderId = order.ID;
+                int articleId = articleData.ID;
+                int orderId = orderData.ID;
                 int i = ConnectArticleAndOrder(articleId, orderId);
-                if (i == 0)
+                if (i == 0) 
                 {
                     connectionProblems = true;
                 }
@@ -204,7 +232,7 @@ class ShopWriter : IShopWriter
             }
             return 0;
         }
-        if (connectionProblems)
+        if (connectionProblems) 
         {
             return 0;
         }
@@ -214,7 +242,7 @@ class ShopWriter : IShopWriter
         }
     }
 
-    public int RemoveArticleAndOrderConnection(int orderId)
+    public int RemoveArticleAndOrderConnection(int orderId) 
     {
         int rowsAffected = -1;
         try
