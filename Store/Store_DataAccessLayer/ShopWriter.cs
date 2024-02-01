@@ -19,19 +19,27 @@ class ShopWriter : IShopWriter
     }
 
     // Artikel
-    public int AddArticle(Article article) 
+    public int AddArticle(string articleJson) 
     {
         try
         {
+            dynamic articleData = JsonConvert.DeserializeObject(articleJson);
+
             connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO Artikel (ID, Name, Preis) VALUES (@ID, @Name, @Preis)", connection);
-            command.Parameters.AddWithValue("@ID", article.ID);
-            command.Parameters.AddWithValue("@Name", article.Name);
-            command.Parameters.AddWithValue("@Preis", article.Preis);
+            /*
+            command.Parameters.AddWithValue("@ID", articleData.id);
+            command.Parameters.AddWithValue("@Name", articleData.name);
+            command.Parameters.AddWithValue("@Preis", articleData.price);
+            */
+
+            command.Parameters.AddWithValue("@ID", Convert.ToInt32(articleData.id));
+            command.Parameters.AddWithValue("@Name", articleData.name.ToString());
+            command.Parameters.AddWithValue("@Preis", Convert.ToDouble(articleData.price));
 
             command.ExecuteNonQuery();
-            Console.WriteLine($"Artikel mit ID {article.ID} erfolgreich angelegt.");
+            Console.WriteLine($"Artikel mit ID {articleData.id} erfolgreich angelegt.");
 
             connection.Close();
         }
@@ -82,20 +90,21 @@ class ShopWriter : IShopWriter
     }
 
     // Kunde
-    public int AddCustomer(Customer customer)
+    public int AddCustomer(string customerJson)
     {
         try
         {
+            dynamic customerData = JsonConvert.DeserializeObject(customerJson);
             connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO kunden (name, id, password, email) VALUES (@name, @id, @password, @email)", connection);
-            command.Parameters.AddWithValue("@id", customer.ID);
-            command.Parameters.AddWithValue("@name", customer.Name);
-            command.Parameters.AddWithValue("@password", customer.Password);
-            command.Parameters.AddWithValue("@email", customer.Email);
+            command.Parameters.AddWithValue("@id", Convert.ToInt32(customerData.id));
+            command.Parameters.AddWithValue("@name", customerData.name.ToString());
+            command.Parameters.AddWithValue("@password", customerData.password.ToString());
+            command.Parameters.AddWithValue("@email", customerData.email.ToString());
 
             command.ExecuteNonQuery();
-            Console.WriteLine($"Kunde mit ID {customer.ID} erfolgreich angelegt.");
+            Console.WriteLine($"Kunde mit ID {customerData.id} erfolgreich angelegt.");
 
             connection.Close();
         }
@@ -153,8 +162,8 @@ class ShopWriter : IShopWriter
             connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO BestellungsArtikel (BestellungsID, ArtikelID) VALUES (@BestellungsID, @ArtikelID)", connection);
-            command.Parameters.AddWithValue("@BestellungsID", orderId);
-            command.Parameters.AddWithValue("@ArtikelID", articleId);
+            command.Parameters.AddWithValue("@BestellungsID", Convert.ToInt32(orderId));
+            command.Parameters.AddWithValue("@ArtikelID", Convert.ToInt32(articleId));
 
             command.ExecuteNonQuery();
             Console.WriteLine($"Artikel mit der ID {articleId} mit der Bestellung mit ID {orderId} erfolgreich verbunden.");
@@ -177,19 +186,19 @@ class ShopWriter : IShopWriter
     {
         /*
          {
-          "iD": 1,
+          "id": 1,
           "payd": true,
           "totalPrice": 99.99,
           "articleList": [
             {
-              "ID": 1,
-              "Name": "Product A",
-              "Preis": 19.99
+              "id": 1,
+              "name": "Product A",
+              "price": 19.99
             },
             {
-              "ID": 2,
-              "Name": "Product B",
-              "Preis": 29.99
+              "id": 2,
+              "name": "Product B",
+              "price": 29.99
             }
           ]
         }
@@ -202,20 +211,20 @@ class ShopWriter : IShopWriter
             connection.Open();
 
             SqlCommand command = new SqlCommand("INSERT INTO Bestellungen (ID, Bezahlt, Gesamtpreis) VALUES (@ID, @Bezahlt, @Gesamtpreis)", connection);
-            command.Parameters.AddWithValue("@ID", orderData.ID);
-            command.Parameters.AddWithValue("@Bezahlt", orderData.Payd);
-            command.Parameters.AddWithValue("@Gesamtpreis", orderData.TotalPrice);
+            command.Parameters.AddWithValue("@ID", Convert.ToInt32(orderData.id));
+            command.Parameters.AddWithValue("@Bezahlt", Convert.ToBoolean(orderData.payd));
+            command.Parameters.AddWithValue("@Gesamtpreis", Convert.ToDouble(orderData.totalPrice));
 
             command.ExecuteNonQuery();
-            Console.WriteLine($"Bestellung mit ID {orderData.ID} erfolgreich angelegt.");
+            Console.WriteLine($"Bestellung mit ID {orderData.id} erfolgreich angelegt.");
 
             connection.Close();
 
             //List<Article> articleListForOrder = order.ArticleList;
-            foreach (var articleData in orderData.ArticleList)
+            foreach (var articleData in orderData.articleList)
             {
-                int articleId = articleData.ID;
-                int orderId = orderData.ID;
+                int articleId = articleData.id;
+                int orderId = orderData.id;
                 int i = ConnectArticleAndOrder(articleId, orderId);
                 if (i == 0) 
                 {

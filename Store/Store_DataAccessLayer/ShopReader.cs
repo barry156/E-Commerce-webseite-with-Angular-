@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using System.Data.SqlClient;
 using System.Data;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 //namespace ConsoleApp1
 //{
@@ -20,9 +20,10 @@ class ShopReader : IShopReader{
     }
 
     //SPEZIAL ABFRAGEN
-    public List<Article> GetArticlesByOrderID(int orderID)
+    public string GetArticlesByOrderID(int orderID)
     {
-        List<Article> articleList = new List<Article>();
+        //List<Article> articleList = new List<Article>();
+        List<dynamic> articleList = new List<dynamic>();
 
         try
         {
@@ -38,11 +39,11 @@ class ShopReader : IShopReader{
 
             while (reader.Read())
             {
-                Article article = new Article
+                dynamic article = new
                 {
-                    ID = Convert.ToInt32(reader["ID"]),
-                    Name = reader["Name"].ToString(),
-                    Preis = Convert.ToDecimal(reader["Preis"])
+                    id = Convert.ToInt32(reader["ID"]),
+                    name = reader["Name"].ToString(),
+                    price = Convert.ToDecimal(reader["Preis"])
                 };
 
                 articleList.Add(article);
@@ -57,13 +58,14 @@ class ShopReader : IShopReader{
                 connection.Close();
             }
         }
-        return articleList;
+        //return articleList;
+        return JsonConvert.SerializeObject(articleList, Formatting.Indented);
     }
 
     //EINZEL ABFRAGEN
-    public Article ReadArticleByID(int articleID)
+    public string ReadArticleByID(int articleID)
     {
-        Article article = null;
+        dynamic article = null;
 
         try
         {
@@ -75,11 +77,11 @@ class ShopReader : IShopReader{
 
             if (reader.Read())
             {
-                article = new Article
+                article = new
                 {
-                    ID = Convert.ToInt32(reader["ID"]),
-                    Name = reader["Name"].ToString(),
-                    Preis = Convert.ToDecimal(reader["Preis"])
+                    id = Convert.ToInt32(reader["ID"]),
+                    name = reader["Name"].ToString(),
+                    price = Convert.ToDecimal(reader["Preis"])
                 };
             }
 
@@ -93,12 +95,14 @@ class ShopReader : IShopReader{
                 connection.Close();
             }
         }
-        return article;
+        //return article;
+        return JsonConvert.SerializeObject(article, Formatting.Indented);
     }
 
     // LISTEN ABFRAGEN
-    public List<Customer> ReadAllCustomer() {
-        List<Customer> customerList = new List<Customer>();
+    public string ReadAllCustomer() {
+        //List<Customer> customerList = new List<Customer>();
+        List<dynamic> customerList = new List<dynamic>();
 
         try {
             connection.Open();
@@ -108,13 +112,13 @@ class ShopReader : IShopReader{
 
             while (reader.Read())
             {
-                Customer customer = new Customer
+                dynamic customer = new
                 {
-                    ID              = Convert.ToInt32(reader["id"]),
-                    Name            = reader["name"].ToString(),
-                    Password        = reader["password"].ToString(),
-                    Email           = reader["email"].ToString(),
-                    Bestellungen    = reader["bestellungen"].ToString()
+                    id              = Convert.ToInt32(reader["id"]),
+                    name            = reader["name"].ToString(),
+                    password        = reader["password"].ToString(),
+                    email           = reader["email"].ToString(),
+                    orders          = reader["bestellungen"].ToString()
                 };
                 customerList.Add(customer);
             }
@@ -126,13 +130,15 @@ class ShopReader : IShopReader{
                 connection.Close();
             }
         }
-        return customerList;
+        //return customerList;
         //return new List<Customer>();
+        return JsonConvert.SerializeObject(customerList, Formatting.Indented);
     }
 
-    public List<Article> ReadAllArticles()
+    public string ReadAllArticles()
     {
-        List<Article> articleList = new List<Article>();
+        //List<Article> articleList = new List<Article>();
+        List<dynamic> articleList = new List<dynamic>();
 
         try
         {
@@ -143,11 +149,11 @@ class ShopReader : IShopReader{
 
             while (reader.Read())
             {
-                Article article = new Article
+                dynamic article = new
                 {
-                    ID      = Convert.ToInt32(reader["ID"]),
-                    Name    = reader["Name"].ToString(),
-                    Preis   = Convert.ToDecimal(reader["Preis"])
+                    id      = Convert.ToInt32(reader["ID"]),
+                    name    = reader["Name"].ToString(),
+                    price   = Convert.ToDecimal(reader["Preis"])
                 };
                 articleList.Add(article);
             }
@@ -161,12 +167,15 @@ class ShopReader : IShopReader{
                 connection.Close();
             }
         }
-        return articleList;
+        //return articleList;
+        return JsonConvert.SerializeObject(articleList, Formatting.Indented);
     }
 
-    public List<Order> ReadAllOrders()
+    public string ReadAllOrders()
     {
-        List<Order> orderList = new List<Order>();
+        //List<Order> orderList = new List<Order>();
+        List<dynamic> orderList = new List<dynamic>();
+        List<dynamic> orderListReturn = new List<dynamic>();
 
         try
         {
@@ -178,23 +187,34 @@ class ShopReader : IShopReader{
             while (reader.Read())
             {
                 int orderId = Convert.ToInt32(reader["ID"]);
-                List<Article> articleList = new List<Article>(); 
+                //List<Article> articleList = new List<Article>(); 
+                //List<dynamic> articleList = new List<dynamic>();
 
-                Order order = new Order
+                //dynamic articleList = JsonConvert.DeserializeObject(GetArticlesByOrderID(orderId));
+
+                dynamic order = new
                 {
-                    ID = orderId,
-                    ArticleList = articleList,
-                    Payd = Convert.ToBoolean(reader["Bezahlt"]),
-                    TotalPrice = Convert.ToDecimal(reader["Gesamtpreis"])
+                    id = orderId,
+                    //articleList = articleList, // GetArticlesByOrderID(orderId), //dynamic list
+                    payd = Convert.ToBoolean(reader["Bezahlt"]),
+                    totalPrice = Convert.ToDecimal(reader["Gesamtpreis"])
                 };
                 orderList.Add(order);
             }
             connection.Close();
 
             foreach (var order in orderList) {
-                int orderId = order.ID;
-                List<Article> articleListForOrder = GetArticlesByOrderID(orderId);
-                order.ArticleList = articleListForOrder;
+                int orderId = order.id;
+                dynamic articleListForOrder = JsonConvert.DeserializeObject(GetArticlesByOrderID(orderId));
+                dynamic orderReturn = new
+                {
+                    id = order.id,
+                    articleList = articleListForOrder, // GetArticlesByOrderID(orderId), //dynamic list
+                    payd = order.payd,
+                    totalPrice = order.totalPrice
+                };
+                orderListReturn.Add(orderReturn);
+                //order.articleList = articleListForOrder;
             }
 
         }
@@ -206,7 +226,8 @@ class ShopReader : IShopReader{
                 connection.Close();
             }
         }
-        return orderList;
+        //return orderList;
+        return JsonConvert.SerializeObject(orderListReturn, Formatting.Indented);
     }
 
 }
