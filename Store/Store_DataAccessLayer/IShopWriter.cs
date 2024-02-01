@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 interface IShopWriter
 {
-    int AddArticle(Article article);
+    int AddArticle(string articleJson);
     int DeleteArticle(int Id);
-    int AddCustomer(Customer customer);
+    int AddCustomer(string customerString);
     int DeleteCustomer(int customerId);
-    int AddOrder(Order order);
+    int AddOrder(string orderJson);
     int RemoveOrder(int orderId);
 }

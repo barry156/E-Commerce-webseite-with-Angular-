@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using System.Collections.Generic;
-
 public interface IShopReader
 {
-    List<Article> GetArticlesByOrderID(int orderID);
+    // List<Article> GetArticlesByOrderID(int orderID);
+    string GetArticlesByOrderID(int orderID);
 
-    Article ReadArticleByID(int articleID);
+    string ReadArticleByID(int articleID);
 
-    List<Customer> ReadAllCustomer();
-    List<Article> ReadAllArticles();
-    List<Order> ReadAllOrders();
+    string ReadAllCustomer();
+    string ReadAllArticles();
+    string ReadAllOrders();
 }
