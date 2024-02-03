@@ -1,10 +1,16 @@
-﻿using Store_ApplicationLayer.Models;
+﻿using ServiceStack;
+using Store_ApplicationLayer.Models;
+using Store_DataAccessLayer_Bib_PostgreSQL;
+using Store_DataAccessLayer_PostgreSQL.Models;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Store_ApplicationLayer.Logic
 {
     public static class Store_Logic
     {
+        private static readonly BackEndInterface db = new BackEndHandler();
+
         #region Login & Register
         public static Model_Logic_Login checkLoginData(Model_Login userFromRequest)
         {
@@ -58,7 +64,7 @@ namespace Store_ApplicationLayer.Logic
                     }
                     else
                     {
-                        new Model_Logic_Login(Logic_Answer.OK, id);
+                        return new Model_Logic_Login(Logic_Answer.OK, id);
                     }
                 }
                 else
@@ -92,7 +98,8 @@ namespace Store_ApplicationLayer.Logic
         {
             try
             {
-                //
+                string resultJson = db.Login(JsonSerializer.Serialize(new Model_UserRequest() { email = email }));
+                return JsonSerializer.Deserialize<Model_Login>(resultJson);
             }
             catch (Exception ex)
             {
@@ -105,7 +112,8 @@ namespace Store_ApplicationLayer.Logic
         {
             try
             {
-                //
+                string resultJson = db.Register(JsonSerializer.Serialize(user));
+                return JsonSerializer.Deserialize<int>(resultJson);
             }
             catch (Exception ex)
             {
@@ -120,9 +128,8 @@ namespace Store_ApplicationLayer.Logic
         {
             try
             {
-                List<Model_Product> products = new();
-                //
-                return products;
+                string resultJson = db.getAllProducts();
+                return JsonSerializer.Deserialize<List<Model_Product>>(resultJson);
             }
             catch (Exception ex)
             {
@@ -158,10 +165,8 @@ namespace Store_ApplicationLayer.Logic
         {
             try
             {
-
-                int amount = -1;
-                //
-                return amount;
+                string resultJson = db.addProductToCart(JsonSerializer.Serialize(new Model_ProductRequest() { product_id = productId, user_id = userId }));
+                return JsonSerializer.Deserialize<int>(resultJson);
             }
             catch (Exception ex)
             {
@@ -174,10 +179,8 @@ namespace Store_ApplicationLayer.Logic
         {
             try
             {
-
-                int amount = -1;
-                //
-                return amount;
+                string resultJson = db.removeProductFromCart(JsonSerializer.Serialize(new Model_ProductRequest() { product_id = productId, user_id = userId }));
+                return JsonSerializer.Deserialize<int>(resultJson);
             }
             catch (Exception ex)
             {
@@ -186,32 +189,22 @@ namespace Store_ApplicationLayer.Logic
             return -1;
         }
 
-        public static Model_Cart getCartFromDB(int userId)
+        public static Model_UICart getCartFromDB(int userId)
         {
             try
             {
                 double totalPrice = 0;
-                List<Model_Product> products = getAllProductsFromDB();
-                if (products == null)
+                Model_UICart model_UICart = new();
+                string resultJson = db.getOrder(JsonSerializer.Serialize(userId));
+                Model_Cart cart = JsonSerializer.Deserialize<Model_Cart>(resultJson);
+                foreach (ProductFromOrder product in cart.products)
                 {
-                    throw new Exception("get products from db failed");
+                    Model_Product compProduct = getProductFromDB(product.id);
+                    totalPrice += (compProduct.price * product.amount);
+                    model_UICart.products.Add(compProduct);
                 }
-                List<int> productIds = new();
-                //get productIds from DB
-                Model_Cart cart = new();
-                foreach (int id in productIds)
-                {
-                    foreach (Model_Product product in products)
-                    {
-                        if (product.id == id)
-                        {
-                            totalPrice += product.price;
-                            cart.products.Add(product);
-                        }
-                    }
-                }
-                cart.total_price = totalPrice;
-                return cart;
+                model_UICart.total_price = totalPrice;
+                return model_UICart;
             }
             catch (Exception ex)
             {
