@@ -5,6 +5,7 @@ import { ProductsService } from '../products.service';
 import { Router } from '@angular/router';
 import { ShoppingcartService } from '../contact/shoppingcart.service';
 import { AuthentificationService } from '../authentification.service';
+import { SearchProductPipe } from '../search-product.pipe';
 
 @Component({
   selector: 'app-shop',
@@ -15,6 +16,7 @@ export class ShopComponent {
   @Input() products!: ProductInBackend[];
   filteredProducts: ProductInBackend[] = [];
   changeResult  = 29;
+  searchText: string = '';
 
   colorFilter: { id: string ,name : string, check: boolean}[] = [
     { id: 'color-1' , name: 'black', check : false },
@@ -33,13 +35,43 @@ export class ShopComponent {
     
     this.productsService.getProductsFromBackend()
       .subscribe((data) => {
+        console.log(data);
         this.products = data;
         
       });
+      // test purpose
+    /*this.products = [
+        {
+          id : 1,
+          name : 'product 1',
+          price : 100 ,
+          
+          url : 'assets/img/product-1.jpg',
+          
+        },
+        
+        {
+          id : 2,
+          name : 'product 1',
+          price : 99 ,
+         
+          url : 'assets/img/product-2.jpg',
+          
+          
+        },
+        {
+          id : 3,
+          name : 'product 1',
+          price : 123 ,
+          url : 'assets/img/product-3.jpg',
+          
+          
+        },
+      ]*/
     
-    this.filteredProducts = [...this.products];
+    /*this.filteredProducts = [...this.products];
     const priceRange = document.getElementById('priceRange') as HTMLInputElement;
-    const priceValue = document.getElementById('priceValue') as HTMLSpanElement;
+    const priceValue = document.getElementById('priceValue') as HTMLSpanElement;*/
    
   }
 
