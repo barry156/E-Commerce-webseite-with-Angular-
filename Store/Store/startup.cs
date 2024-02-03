@@ -21,6 +21,7 @@
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseCors("E-commerce");
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
