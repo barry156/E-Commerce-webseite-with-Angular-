@@ -23,7 +23,7 @@
 
         public double total_price { get; set; }
 
-        public Model_Cart
+        
     }
 
     public class Model_Logic_Login

@@ -3,6 +3,7 @@ import { ProductCart, ShoppingcartService } from '../contact/shoppingcart.servic
 import { Product } from '../model/product_model';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { AuthentificationService } from '../authentification.service';
 
 
 
@@ -17,7 +18,8 @@ export class CartComponent implements DoCheck {
 
   products: ProductCart[] = [];
 
-  constructor(private shoppingCartService: ShoppingcartService, private router: Router) {}
+  constructor(private shoppingCartService: ShoppingcartService, private router: Router,
+    private authService: AuthentificationService) {}
 
   ngDoCheck() {
    this.products = this.shoppingCartService.getAllProducts();
@@ -30,6 +32,46 @@ export class CartComponent implements DoCheck {
     
     
   }
+  //code for the backend
+  removeProductFromCardInBackend(product: Product) {
+    const userId = this.authService.idOfLoggedUser;
+    this.shoppingCartService.removeProductFromCardInBackend(product.id , userId).subscribe(
+      {
+        next: (response) => {
+          alert("product removed froms the cart  successfully");
+          console.log(response);
+          
+        },
+        error :(error) =>  {
+          console.error('Error :', error);
+         
+        }
+  
+      }
+
+    )
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //
 
   remove(product: Product) {
     this.shoppingCartService.removeProduct(product);

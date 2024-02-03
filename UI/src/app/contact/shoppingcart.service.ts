@@ -36,6 +36,10 @@ export class ShoppingcartService {
       this.shoppingCart.splice(index, 1);
     }
   }
+  removeProductFromCardInBackend(productId : number , userId: number) : Observable <any> {
+    const apiUrl = `http://127.0.0.1:7136/api/ui/put/product/${productId}-${userId}`;
+    return this.http.post(apiUrl,{})
+  }
 
   getAllProducts(): ProductCart[] {
     return this.shoppingCart;
