@@ -33,7 +33,7 @@
                                         <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" class="form-control" [value]="product.cartQuantity" form-control-sm bg-secondary text-center>
+                                    <input type="text" class="form-control" [value]="product.amount" form-control-sm bg-secondary text-center>
                                     <div class="input-group-btn">
                                         <button (click)="increaseQuantity(this.product)" class="btn btn-sm btn-primary btn-plus">
                                             <i class="fa fa-plus"></i>
@@ -42,10 +42,10 @@
                                 </div>
                             </td>
                             
-                            <td class="align-middle">{{ product!.price && product!.cartQuantity ? product!.price * product!.cartQuantity : 0 }}</td>
+                            <td class="align-middle">{{ product!.price && product!.amount ? product!.price * product!.amount : 0 }}</td>
 
 
-                            <td class="align-middle"><button  (click)="remove(this.product)" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
+                            <td class="align-middle"><button  (click)="removeProductFromCardInBackend(this.product)" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button></td>
                         </tr>
                         
                     </tbody>
