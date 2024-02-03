@@ -100,7 +100,8 @@ class ShopReader : IShopReader{
     }
 
     // LISTEN ABFRAGEN
-    public string ReadAllCustomer() {
+    public string ReadAllCustomer() 
+    {
         //List<Customer> customerList = new List<Customer>();
         List<dynamic> customerList = new List<dynamic>();
 
@@ -228,6 +229,44 @@ class ShopReader : IShopReader{
         }
         //return orderList;
         return JsonConvert.SerializeObject(orderListReturn, Formatting.Indented);
+    }
+
+    public string Login(string email)
+    {
+        dynamic customer = null;
+        string customerJson = "{}";
+        try
+        {
+            connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT * FROM Customer WHERE email = @email", connection);
+            command.Parameters.AddWithValue("@email", email);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                customer = new
+                {
+                    id = Convert.ToInt32(reader["id"]),
+                    password = reader["password"].ToString(),
+                    email = reader["email"].ToString()
+                };
+            }
+            connection.Close();
+
+            customerJson = JsonConvert.SerializeObject(customer, Formatting.Indented);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Verbindungsaufbau: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            return "{}";
+        }
+        return customerJson; // JsonConvert.SerializeObject(customerList, Formatting.Indented);
     }
 
 }

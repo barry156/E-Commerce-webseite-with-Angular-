@@ -14,4 +14,5 @@ public interface IShopReader
     string ReadAllCustomer();
     string ReadAllArticles();
     string ReadAllOrders();
+    string Login(string email);
 }

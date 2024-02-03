@@ -322,4 +322,32 @@ class ShopWriter : IShopWriter
             return rowsAffected;
         }
     }
+
+    public int Register(string email, string password)
+    {
+        int customerId = -1;
+        try
+        {
+            connection.Open();
+
+            SqlCommand command = new SqlCommand("INSERT INTO Customer (password, email) OUTPUT INSERTED.id VALUES (@password, @email)", connection);
+            command.Parameters.AddWithValue("@password", password);
+            command.Parameters.AddWithValue("@email", email);
+
+            customerId = Convert.ToInt32(command.ExecuteScalar());
+            Console.WriteLine($"Kunde mit Email {email} erfolgreich angelegt unter ID {customerId}.");
+
+            connection.Close();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Hinzufügen des Kunden: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            return -1;
+        }
+        return customerId;
+    }
 }
