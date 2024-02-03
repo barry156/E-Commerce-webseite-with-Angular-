@@ -5,3 +5,5 @@ Store/Tester/bin
 Store/Tester/obj
 Store/Store_DataAccessLayer/bin
 Store/Store_DataAccessLayer/obj
+Store/Store_DataAccessLayer_Bib_PostgreSQL/bin
+Store/Store_DataAccessLayer_Bib_PostgreSQL/obj
