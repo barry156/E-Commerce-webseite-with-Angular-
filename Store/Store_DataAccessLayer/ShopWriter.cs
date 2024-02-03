@@ -10,12 +10,12 @@ using Newtonsoft.Json;
 
 class ShopWriter : IShopWriter
 {
-    private string connectionString = "Data Source=DESKTOP-ODAGOGJ\\SQLEXPRESS;Initial Catalog=ShopDB;User ID=shopUser;Password=123456789;";
+    private string CONNECTION_STRING = "Data Source=DESKTOP-ODAGOGJ\\SQLEXPRESS;Initial Catalog=ShopDB;User ID=shopUser;Password=123456789;";
     private SqlConnection connection;
 
     public ShopWriter()
     {
-        connection = new SqlConnection(connectionString);
+        connection = new SqlConnection(CONNECTION_STRING);
     }
 
     // Artikel
@@ -349,5 +349,154 @@ class ShopWriter : IShopWriter
             return -1;
         }
         return customerId;
+    }
+
+    public int AddProductToCart(int customerId, int articleId)
+    {
+        try
+        {
+            int orderId = GetOrderIdByCustomerId(customerId);
+            
+            if (orderId != -1)
+            {
+                // Order existiert
+                //Artikel in der Order?
+                bool articleExistsInOrder = ArticleExistsInOrder(orderId, articleId);
+                if (articleExistsInOrder) 
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("UPDATE OrderArticle SET articleAmount = articleAmount + 1 OUTPUT INSERTED.articleAmount WHERE orderid = @orderid AND articleid = @articleid", connection);
+                    command.Parameters.AddWithValue("@orderid", orderId);
+                    int updatedAmount = Convert.ToInt32(command.ExecuteScalar());
+                    connection.Close();
+                    return updatedAmount;
+                }
+                else
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("INSERT INTO OrderArticle (orderid, articleid, articleAmount) VALUES (@orderid, @articleid, 1);", connection);
+                    command.Parameters.AddWithValue("@orderid", orderId);
+                    command.Parameters.AddWithValue("@articleid", articleId);
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                    return 1;
+                }
+            }
+            else
+            {
+                int newOrderId = CreateOrder();
+                if (newOrderId != -1)
+                {
+                    // Verknüpfung in der Tabelle CustomerOrder erstellen
+                    connection.Open();
+                    SqlCommand customerOrderCommand = new SqlCommand("INSERT INTO CustomerOrder (customerid, orderid) VALUES (@customerid, @orderid);", connection);
+                    customerOrderCommand.Parameters.AddWithValue("@customerid", customerId);
+                    customerOrderCommand.Parameters.AddWithValue("@orderid", newOrderId);
+                    customerOrderCommand.ExecuteNonQuery();
+                    connection.Close();
+
+                    // Verknüpfung in der Tabelle OrderArticle erstellen
+                    connection.Open();
+                    SqlCommand orderArticleCommand = new SqlCommand("INSERT INTO OrderArticle (orderid, articleid, articleAmount) VALUES (@orderid, @articleid, 1);", connection);
+                    orderArticleCommand.Parameters.AddWithValue("@orderid", newOrderId);
+                    orderArticleCommand.Parameters.AddWithValue("@articleid", articleId);
+                    orderArticleCommand.ExecuteNonQuery();
+                    connection.Close();
+                    return 1;
+                }
+                else
+                {
+                    // Fehler beim Erstellen der Bestellung
+                    Console.WriteLine("Fehler beim Erstellen einer neuen Bestellung.");
+                    return -1;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Hinzufügen des Produkts zum Warenkorb: " + e.Message);
+            return -1;
+        }
+    }
+
+    // Hilfsfunktionen
+    private int CreateOrder()
+    {
+        try
+        {
+            connection.Open();
+            SqlCommand command = new SqlCommand("INSERT INTO Orders (payd, totalPrice) VALUES (0, 0); SELECT SCOPE_IDENTITY();", connection);
+            int newOrderId = Convert.ToInt32(command.ExecuteScalar());
+            connection.Close();
+
+            return newOrderId;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Erstellen einer neuen Bestellung: " + e.Message);
+            return -1;
+        }
+    }
+
+    private bool ArticleExistsInOrder(int orderId, int articleId)
+    {
+        try
+        {
+            string checkArticleQuery = @"
+            SELECT COUNT(*)
+            FROM OrderArticle
+            WHERE orderid = @OrderId AND articleid = @ArticleId";
+
+            using (SqlCommand checkArticleCommand = new SqlCommand(checkArticleQuery, connection))
+            {
+                checkArticleCommand.Parameters.AddWithValue("@OrderId", orderId);
+                checkArticleCommand.Parameters.AddWithValue("@ArticleId", articleId);
+
+                connection.Open();
+                int count = Convert.ToInt32(checkArticleCommand.ExecuteScalar());
+                connection.Close();
+
+                if (count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Überprüfen des Artikels in der Bestellung: " + e.Message);
+            return false;
+        }
+    }
+
+    private int GetOrderIdByCustomerId(int customerId)
+    {
+        try
+        {
+            string getOrderQuery = @"
+            SELECT orderid
+            FROM CustomerOrder
+            WHERE customerid = @CustomerId";
+
+            using (SqlCommand getOrderCommand = new SqlCommand(getOrderQuery, connection))
+            {
+                getOrderCommand.Parameters.AddWithValue("@CustomerId", customerId);
+
+                connection.Open();
+                object result = getOrderCommand.ExecuteScalar();
+                connection.Close();
+
+                return result != null ? Convert.ToInt32(result) : -1;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Abrufen der OrderID: " + e.Message);
+            return -1;
+        }
     }
 }

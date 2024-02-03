@@ -42,6 +42,11 @@ class DatabaseTableCreator : IDatabaseTableCreator
                     CreateOrderArticleTable(connection);
                 }
 
+                if (!TableExists(connection, "CustomerOrder"))
+                {
+                    CreateCustomerOrderTable(connection);
+                }
+
                 connection.Close();
                 Console.WriteLine("Tabellen erfolgreich erstellt.");
             }
@@ -97,6 +102,18 @@ class DatabaseTableCreator : IDatabaseTableCreator
         CREATE TABLE OrderArticle (
             orderid INT REFERENCES Orders(id) NOT NULL,
             articleid INT REFERENCES Article(id) NOT NULL
+            articleAmount INT NOT NULL,
+        )";
+
+        ExecuteNonQuery(connection, createTableQuery);
+    }
+
+    private void CreateCustomerOrderTable(SqlConnection connection)
+    {
+        string createTableQuery = @"
+        CREATE TABLE CustomerOrder (
+            customerid INT REFERENCES Customer(id) NOT NULL,
+            orderid INT REFERENCES Orders(id) NOT NULL
         )";
 
         ExecuteNonQuery(connection, createTableQuery);
