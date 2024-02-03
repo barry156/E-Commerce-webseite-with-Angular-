@@ -16,7 +16,22 @@ export class CartComponent implements DoCheck {
   subTotal!: number;
   shipping = 10;
 
-  products: ProductInBackend[] = [];
+  products: ProductInBackend[] = [
+    {
+      id:1,
+      name: 'Buch',
+      price: 223,
+      url : 'grgr',
+      amount: 23
+    },
+    {
+      id:2,
+      name: 'Buch',
+      price: 223,
+      url : 'grgr',
+      amount: 23
+    },
+];
 
   constructor(private shoppingCartService: ShoppingcartService, private router: Router,
     private authService: AuthentificationService) {}
@@ -81,7 +96,7 @@ export class CartComponent implements DoCheck {
           console.log(response);
           
         },
-        error :(error) =>  {
+        error:(error) =>  {
           console.error('Error :', error);
          
         }
@@ -91,23 +106,6 @@ export class CartComponent implements DoCheck {
     )
 
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   //
