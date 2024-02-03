@@ -269,4 +269,73 @@ class ShopReader : IShopReader{
         return customerJson; // JsonConvert.SerializeObject(customerList, Formatting.Indented);
     }
 
+    public string getOrder(int customerId) 
+    {
+        try
+        {
+            int orderId = GetOrderForCustomer(customerId);
+            if (orderId == -1)
+            {
+                return "{}";
+            }
+            List<dynamic> orderList = new List<dynamic>();
+
+            SqlCommand command = new SqlCommand("SELECT articleid, articleAmount FROM OrderArticle WHERE orderid = @orderid", connection);
+            command.Parameters.AddWithValue("@orderid", orderId);
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                dynamic orderItem = new
+                {
+                    productId = Convert.ToInt32(reader["articleid"]),
+                    amount = Convert.ToInt32(reader["articleAmount"])
+                };
+
+                orderList.Add(orderItem);
+            }
+            connection.Close();
+
+            return JsonConvert.SerializeObject(orderList, Formatting.Indented);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Abrufen der Bestellung für den Kunden: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            return "{}";
+        }
+    }
+
+    // Hilfsfunktionen
+    private int GetOrderForCustomer(int customerId)
+    {
+        int orderId = -1;
+
+        try
+        {
+            connection.Open();
+            SqlCommand command = new SqlCommand("SELECT TOP 1 orderid FROM CustomerOrder WHERE customerid = @customerid", connection);
+            command.Parameters.AddWithValue("@customerid", customerId);
+            object result = command.ExecuteScalar();
+
+            if (result != null)
+            {
+                orderId = Convert.ToInt32(result);
+            }
+            connection.Close();
+            return orderId;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Abrufen der Bestellung für den Kunden: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            return -1;
+        }
+    }
 }
