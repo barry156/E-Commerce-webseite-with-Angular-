@@ -57,11 +57,11 @@ class DatabaseTableCreator : IDatabaseTableCreator
     private void CreateArticleTable(SqlConnection connection)
     {
         string createTableQuery = @"
-            CREATE TABLE Article (
-                id INT PRIMARY KEY NOT NULL,
-                name NVARCHAR(255),
-                price DECIMAL(10,2)
-            )";
+        CREATE TABLE Article (
+            id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+            name NVARCHAR(255),
+            price DECIMAL(10,2)
+        )";
 
         ExecuteNonQuery(connection, createTableQuery);
     }
@@ -69,11 +69,11 @@ class DatabaseTableCreator : IDatabaseTableCreator
     private void CreateOrderTable(SqlConnection connection)
     {
         string createTableQuery = @"
-            CREATE TABLE Orders (
-                id INT PRIMARY KEY NOT NULL,
-                payd BIT,
-                totalPrice DECIMAL(10,2)
-            )";
+        CREATE TABLE Orders (
+            id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+            payd BIT,
+            totalPrice DECIMAL(10,2)
+        )";
 
         ExecuteNonQuery(connection, createTableQuery);
     }
@@ -81,12 +81,12 @@ class DatabaseTableCreator : IDatabaseTableCreator
     private void CreateCustomerTable(SqlConnection connection)
     {
         string createTableQuery = @"
-            CREATE TABLE Customer (
-                id INT PRIMARY KEY NOT NULL,
-                name NVARCHAR(255),
-                password NVARCHAR(255),
-                email NVARCHAR(255)
-            )";
+        CREATE TABLE Customer (
+            id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+            name NVARCHAR(255),
+            password NVARCHAR(255),
+            email NVARCHAR(255)
+        )";
 
         ExecuteNonQuery(connection, createTableQuery);
     }
@@ -94,10 +94,10 @@ class DatabaseTableCreator : IDatabaseTableCreator
     private void CreateOrderArticleTable(SqlConnection connection)
     {
         string createTableQuery = @"
-            CREATE TABLE OrderArticle (
-                orderid INT REFERENCES Orders(id) NOT NULL,
-                articleid INT REFERENCES Article(id) NOT NULL
-            )";
+        CREATE TABLE OrderArticle (
+            orderid INT REFERENCES Orders(id) NOT NULL,
+            articleid INT REFERENCES Article(id) NOT NULL
+        )";
 
         ExecuteNonQuery(connection, createTableQuery);
     }
