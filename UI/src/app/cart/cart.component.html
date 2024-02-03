@@ -8,9 +8,9 @@
         </div>
     </div>
 </div>
-<div  class="container-fluid pt-5">
-    <div class="row px-xl-5">
-        <ng-container [ngSwitch] = "products.length > 0">
+<div  class="container-fluid pt-5" [ngSwitch] = "products.length > 0">
+    <div class="row px-xl-5" *ngSwitchCase="true">
+        
             <div *ngSwitchCase="true" class="col-lg-8 table-responsive mb-5">
                 <table class="table table-bordered text-center mb-0">
                     <thead class="bg-secondary text-dark">
@@ -51,16 +51,16 @@
                     </tbody>
                 </table>
             </div>
-        </ng-container>
+        
         <div class="col-lg-4">
-            <form class="mb-5" action="">
+            <!--<form class="mb-5" action="">
                 <div class="input-group">
                     <input type="text" class="form-control p-4" placeholder="Coupon Code">
                     <div class="input-group-append">
                         <button class="btn btn-primary">Apply Coupon</button>
                     </div>
                 </div>
-            </form>
+            </form>-->
             <div class="card border-secondary mb-5">
                 <div class="card-header bg-secondary border-0">
                     <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
@@ -84,5 +84,11 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row px-xl-5 " *ngSwitchCase="false">
+        <div class="alert alert-info">
+            <strong>Info!</strong> Please got to shop and select a product
+        </div>
+
     </div>
 </div>

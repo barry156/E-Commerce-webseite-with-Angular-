@@ -47,9 +47,6 @@ export class ShoppingcartService {
   getShoppingCartLength() : number    {
     
     return this.shoppingCart.map((product) => product.amount).reduce((a, b) => a + b, 0);
-
-
-
   }
   addProductToCartInBackend (productId  : number , userId : number) : Observable<any>  {
     

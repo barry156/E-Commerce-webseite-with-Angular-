@@ -73,12 +73,12 @@ export class ShopComponent {
   
     this.products = this.productsService.products.filter(product => this.checkedColors.includes(product.color[0]) && product.price <= this.changeResult);
   }*/
-  addProductToShoppingCart(product: ProductInBackend , event : Event)  {
+  /*addProductToShoppingCart(product: ProductInBackend , event : Event)  {
     event.preventDefault();
     this.shoppingCartService.addProduct(product);
     console.log(this.shoppingCartService.getAllProducts());
 
-  }
+  }*/
   addProductToShoppingCartInBackend(product : ProductInBackend , event : Event)   {
   
     event.preventDefault();
