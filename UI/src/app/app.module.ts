@@ -22,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthentificationService } from './authentification.service';
 import { RegisterComponent } from './register/register.component';
 import { ProductsService } from './products.service';
+import { SearchProductPipe } from './search-product.pipe';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { ProductsService } from './products.service';
     LoginComponent,
     ProductdetailComponent,
     PaypalComponent,
-    RegisterComponent
+    RegisterComponent,
+    SearchProductPipe
     
     
   ],
