@@ -12,6 +12,9 @@ interface IShopWriter
     int DeleteCustomer(int customerId);
     int AddOrder(string orderJson);
     int RemoveOrder(int orderId);
+
+    //Wichtig
     int Register(string email, string password);
-    int AddProductToCart(int userId, int productId);
+    int AddProductToCart(int customerId, int articleId);
+    int RemoveProductFromCart(int customerId, int articleId);
 }

@@ -19,7 +19,7 @@ class ShopWriter : IShopWriter
     }
 
     // Artikel
-    public int AddArticle(string articleJson) 
+    public int AddArticle(string articleJson)
     {
         try
         {
@@ -43,7 +43,7 @@ class ShopWriter : IShopWriter
 
             connection.Close();
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
             Console.WriteLine("Fehler beim Hinzufügen des Artikels: " + e.Message);
             if (connection != null && connection.State == ConnectionState.Open)
@@ -155,7 +155,7 @@ class ShopWriter : IShopWriter
     }
 
     // Bestellung
-    public int ConnectArticleAndOrder(int articleId, int orderId) 
+    public int ConnectArticleAndOrder(int articleId, int orderId)
     {
         try
         {
@@ -226,7 +226,7 @@ class ShopWriter : IShopWriter
                 int articleId = articleData.id;
                 int orderId = orderData.id;
                 int i = ConnectArticleAndOrder(articleId, orderId);
-                if (i == 0) 
+                if (i == 0)
                 {
                     connectionProblems = true;
                 }
@@ -241,7 +241,7 @@ class ShopWriter : IShopWriter
             }
             return 0;
         }
-        if (connectionProblems) 
+        if (connectionProblems)
         {
             return 0;
         }
@@ -251,7 +251,7 @@ class ShopWriter : IShopWriter
         }
     }
 
-    public int RemoveArticleAndOrderConnection(int orderId) 
+    public int RemoveArticleAndOrderConnection(int orderId)
     {
         int rowsAffected = -1;
         try
@@ -356,13 +356,13 @@ class ShopWriter : IShopWriter
         try
         {
             int orderId = GetOrderIdByCustomerId(customerId);
-            
+
             if (orderId != -1)
             {
                 // Order existiert
                 //Artikel in der Order?
                 bool articleExistsInOrder = ArticleExistsInOrder(orderId, articleId);
-                if (articleExistsInOrder) 
+                if (articleExistsInOrder)
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand("UPDATE OrderArticle SET articleAmount = articleAmount + 1 OUTPUT INSERTED.articleAmount WHERE orderid = @orderid AND articleid = @articleid", connection);
@@ -415,11 +415,86 @@ class ShopWriter : IShopWriter
         catch (Exception e)
         {
             Console.WriteLine("Fehler beim Hinzufügen des Produkts zum Warenkorb: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            return -1;
+        }
+    }
+
+    public int RemoveProductFromCart(int customerId, int articleId)
+    {
+        try
+        {
+            int orderId = GetOrderIdByCustomerId(customerId);
+            if (orderId == -1)
+            {
+                return -1;
+            }
+            else
+            {
+                bool articleExistsInOrder = ArticleExistsInOrder(orderId, articleId);
+                if (articleExistsInOrder)
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("UPDATE OrderArticle SET articleAmount = articleAmount - 1 OUTPUT INSERTED.articleAmount WHERE orderid = @orderid AND articleid = @articleid", connection);
+                    command.Parameters.AddWithValue("@orderid", orderId);
+                    command.Parameters.AddWithValue("@articleid", articleId);
+                    int updatedAmount = Convert.ToInt32(command.ExecuteScalar());
+                    connection.Close();
+
+                    if (updatedAmount == 0)
+                    {
+                        RemoveArticleFromOrder(orderId, articleId);
+                        return updatedAmount;
+                    }
+                    else
+                    {
+                        return updatedAmount;
+                    }
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Hinzufügen des Produkts zum Warenkorb: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
             return -1;
         }
     }
 
     // Hilfsfunktionen
+    private int RemoveArticleFromOrder(int orderId, int articleId)
+    {
+        try
+        {
+            connection.Open();
+            SqlCommand deleteCommand = new SqlCommand("DELETE FROM OrderArticle WHERE orderid = @orderid AND articleid = @articleid", connection);
+            deleteCommand.Parameters.AddWithValue("@orderid", orderId);
+            deleteCommand.Parameters.AddWithValue("@articleid", articleId);
+            deleteCommand.ExecuteNonQuery();
+            connection.Close();
+            return 1;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Entfernen des Artikels von der Bestellung: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            return -1;
+        }
+    }
+
     private int CreateOrder()
     {
         try
@@ -434,6 +509,10 @@ class ShopWriter : IShopWriter
         catch (Exception e)
         {
             Console.WriteLine("Fehler beim Erstellen einer neuen Bestellung: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
             return -1;
         }
     }
@@ -469,6 +548,10 @@ class ShopWriter : IShopWriter
         catch (Exception e)
         {
             Console.WriteLine("Fehler beim Überprüfen des Artikels in der Bestellung: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
             return false;
         }
     }
@@ -496,6 +579,10 @@ class ShopWriter : IShopWriter
         catch (Exception e)
         {
             Console.WriteLine("Fehler beim Abrufen der OrderID: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
             return -1;
         }
     }
