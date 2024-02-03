@@ -65,6 +65,7 @@ class DatabaseTableCreator : IDatabaseTableCreator
         CREATE TABLE Article (
             id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
             name NVARCHAR(255),
+            url NVARCHAR(255),
             price DECIMAL(10,2)
         )";
 
@@ -101,8 +102,8 @@ class DatabaseTableCreator : IDatabaseTableCreator
         string createTableQuery = @"
         CREATE TABLE OrderArticle (
             orderid INT REFERENCES Orders(id) NOT NULL,
-            articleid INT REFERENCES Article(id) NOT NULL
-            articleAmount INT NOT NULL,
+            articleid INT REFERENCES Article(id) NOT NULL,
+            articleAmount INT NOT NULL
         )";
 
         ExecuteNonQuery(connection, createTableQuery);
