@@ -31,19 +31,19 @@ class ShopReader : IShopReader{
 
             SqlCommand command = new SqlCommand(
                 "SELECT A.* " +
-                "FROM Artikel A " +
-                "JOIN BestellungsArtikel BA ON A.ID = BA.ArtikelID " +
-                "WHERE BA.BestellungsID = @OrderID", connection);
-            command.Parameters.AddWithValue("@OrderID", orderID);
+                "FROM Article A " +
+                "JOIN OrderArticle OA ON A.id = OA.articleid " +
+                "WHERE OA.orderid = @orderid", connection);
+            command.Parameters.AddWithValue("@orderid", orderID);
             SqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
                 dynamic article = new
                 {
-                    id = Convert.ToInt32(reader["ID"]),
-                    name = reader["Name"].ToString(),
-                    price = Convert.ToDecimal(reader["Preis"])
+                    id = Convert.ToInt32(reader["id"]),
+                    name = reader["name"].ToString(),
+                    price = Convert.ToDecimal(reader["price"])
                 };
 
                 articleList.Add(article);
@@ -71,17 +71,17 @@ class ShopReader : IShopReader{
         {
             connection.Open();
 
-            SqlCommand command      = new SqlCommand("SELECT * FROM Artikel WHERE ID = @ArticleID", connection);
-            command.Parameters.AddWithValue("@ArticleID", articleID);
+            SqlCommand command      = new SqlCommand("SELECT * FROM Article WHERE id = @articleid", connection);
+            command.Parameters.AddWithValue("@articleid", articleID);
             SqlDataReader reader    = command.ExecuteReader();
 
             if (reader.Read())
             {
                 article = new
                 {
-                    id = Convert.ToInt32(reader["ID"]),
-                    name = reader["Name"].ToString(),
-                    price = Convert.ToDecimal(reader["Preis"])
+                    id = Convert.ToInt32(reader["id"]),
+                    name = reader["name"].ToString(),
+                    price = Convert.ToDecimal(reader["price"])
                 };
             }
 
@@ -100,14 +100,15 @@ class ShopReader : IShopReader{
     }
 
     // LISTEN ABFRAGEN
-    public string ReadAllCustomer() {
+    public string ReadAllCustomer() 
+    {
         //List<Customer> customerList = new List<Customer>();
         List<dynamic> customerList = new List<dynamic>();
 
         try {
             connection.Open();
 
-            SqlCommand command      = new SqlCommand("SELECT * FROM kunden", connection);
+            SqlCommand command      = new SqlCommand("SELECT * FROM Customer", connection);
             SqlDataReader reader    = command.ExecuteReader();
 
             while (reader.Read())
@@ -118,7 +119,7 @@ class ShopReader : IShopReader{
                     name            = reader["name"].ToString(),
                     password        = reader["password"].ToString(),
                     email           = reader["email"].ToString(),
-                    orders          = reader["bestellungen"].ToString()
+                    orders          = "" //reader["bestellungen"].ToString()
                 };
                 customerList.Add(customer);
             }
@@ -144,16 +145,16 @@ class ShopReader : IShopReader{
         {
             connection.Open();
 
-            SqlCommand command      = new SqlCommand("SELECT * FROM Artikel", connection);
+            SqlCommand command      = new SqlCommand("SELECT * FROM Article", connection);
             SqlDataReader reader    = command.ExecuteReader();
 
             while (reader.Read())
             {
                 dynamic article = new
                 {
-                    id      = Convert.ToInt32(reader["ID"]),
-                    name    = reader["Name"].ToString(),
-                    price   = Convert.ToDecimal(reader["Preis"])
+                    id      = Convert.ToInt32(reader["id"]),
+                    name    = reader["name"].ToString(),
+                    price   = Convert.ToDecimal(reader["price"])
                 };
                 articleList.Add(article);
             }
@@ -181,12 +182,12 @@ class ShopReader : IShopReader{
         {
             connection.Open();
             
-            SqlCommand command      = new SqlCommand("SELECT * FROM Bestellungen", connection);
+            SqlCommand command      = new SqlCommand("SELECT * FROM Orders", connection);
             SqlDataReader reader    = command.ExecuteReader();
 
             while (reader.Read())
             {
-                int orderId = Convert.ToInt32(reader["ID"]);
+                int orderId = Convert.ToInt32(reader["id"]);
                 //List<Article> articleList = new List<Article>(); 
                 //List<dynamic> articleList = new List<dynamic>();
 
@@ -196,8 +197,8 @@ class ShopReader : IShopReader{
                 {
                     id = orderId,
                     //articleList = articleList, // GetArticlesByOrderID(orderId), //dynamic list
-                    payd = Convert.ToBoolean(reader["Bezahlt"]),
-                    totalPrice = Convert.ToDecimal(reader["Gesamtpreis"])
+                    payd = Convert.ToBoolean(reader["payd"]),
+                    totalPrice = Convert.ToDecimal(reader["totalPrice"])
                 };
                 orderList.Add(order);
             }
@@ -230,4 +231,111 @@ class ShopReader : IShopReader{
         return JsonConvert.SerializeObject(orderListReturn, Formatting.Indented);
     }
 
+    public string Login(string email)
+    {
+        dynamic customer = null;
+        string customerJson = "{}";
+        try
+        {
+            connection.Open();
+
+            SqlCommand command = new SqlCommand("SELECT * FROM Customer WHERE email = @email", connection);
+            command.Parameters.AddWithValue("@email", email);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                customer = new
+                {
+                    id = Convert.ToInt32(reader["id"]),
+                    password = reader["password"].ToString(),
+                    email = reader["email"].ToString()
+                };
+            }
+            connection.Close();
+
+            customerJson = JsonConvert.SerializeObject(customer, Formatting.Indented);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Verbindungsaufbau: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            return "{}";
+        }
+        return customerJson; // JsonConvert.SerializeObject(customerList, Formatting.Indented);
+    }
+
+    public string getOrder(int customerId) 
+    {
+        try
+        {
+            int orderId = GetOrderForCustomer(customerId);
+            if (orderId == -1)
+            {
+                return "{}";
+            }
+            List<dynamic> orderList = new List<dynamic>();
+
+            SqlCommand command = new SqlCommand("SELECT articleid, articleAmount FROM OrderArticle WHERE orderid = @orderid", connection);
+            command.Parameters.AddWithValue("@orderid", orderId);
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                dynamic orderItem = new
+                {
+                    productId = Convert.ToInt32(reader["articleid"]),
+                    amount = Convert.ToInt32(reader["articleAmount"])
+                };
+
+                orderList.Add(orderItem);
+            }
+            connection.Close();
+
+            return JsonConvert.SerializeObject(orderList, Formatting.Indented);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Abrufen der Bestellung für den Kunden: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            return "{}";
+        }
+    }
+
+    // Hilfsfunktionen
+    private int GetOrderForCustomer(int customerId)
+    {
+        int orderId = -1;
+
+        try
+        {
+            connection.Open();
+            SqlCommand command = new SqlCommand("SELECT TOP 1 orderid FROM CustomerOrder WHERE customerid = @customerid", connection);
+            command.Parameters.AddWithValue("@customerid", customerId);
+            object result = command.ExecuteScalar();
+
+            if (result != null)
+            {
+                orderId = Convert.ToInt32(result);
+            }
+            connection.Close();
+            return orderId;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Fehler beim Abrufen der Bestellung für den Kunden: " + e.Message);
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                connection.Close();
+            }
+            return -1;
+        }
+    }
 }
