@@ -27,16 +27,16 @@ class ShopWriter : IShopWriter
 
             connection.Open();
 
-            SqlCommand command = new SqlCommand("INSERT INTO Artikel (ID, Name, Preis) VALUES (@ID, @Name, @Preis)", connection);
+            SqlCommand command = new SqlCommand("INSERT INTO Article (id, name, price) VALUES (@id, @name, @price)", connection);
             /*
             command.Parameters.AddWithValue("@ID", articleData.id);
             command.Parameters.AddWithValue("@Name", articleData.name);
             command.Parameters.AddWithValue("@Preis", articleData.price);
             */
 
-            command.Parameters.AddWithValue("@ID", Convert.ToInt32(articleData.id));
-            command.Parameters.AddWithValue("@Name", articleData.name.ToString());
-            command.Parameters.AddWithValue("@Preis", Convert.ToDouble(articleData.price));
+            command.Parameters.AddWithValue("@id", Convert.ToInt32(articleData.id));
+            command.Parameters.AddWithValue("@name", articleData.name.ToString());
+            command.Parameters.AddWithValue("@price", Convert.ToDouble(articleData.price));
 
             command.ExecuteNonQuery();
             Console.WriteLine($"Artikel mit ID {articleData.id} erfolgreich angelegt.");
@@ -62,8 +62,8 @@ class ShopWriter : IShopWriter
         {
             connection.Open();
 
-            SqlCommand command = new SqlCommand("DELETE FROM Artikel WHERE ID = @ArticleID", connection);
-            command.Parameters.AddWithValue("@ArticleID", articleID);
+            SqlCommand command = new SqlCommand("DELETE FROM Article WHERE id = @articleid", connection);
+            command.Parameters.AddWithValue("@articleid", articleID);
             rowsAffected = command.ExecuteNonQuery();
 
             connection.Close();
@@ -97,7 +97,7 @@ class ShopWriter : IShopWriter
             dynamic customerData = JsonConvert.DeserializeObject(customerJson);
             connection.Open();
 
-            SqlCommand command = new SqlCommand("INSERT INTO kunden (name, id, password, email) VALUES (@name, @id, @password, @email)", connection);
+            SqlCommand command = new SqlCommand("INSERT INTO Customer (name, id, password, email) VALUES (@name, @id, @password, @email)", connection);
             command.Parameters.AddWithValue("@id", Convert.ToInt32(customerData.id));
             command.Parameters.AddWithValue("@name", customerData.name.ToString());
             command.Parameters.AddWithValue("@password", customerData.password.ToString());
@@ -127,8 +127,8 @@ class ShopWriter : IShopWriter
         {
             connection.Open();
 
-            SqlCommand command = new SqlCommand("DELETE FROM kunden WHERE id = @CustomerID", connection);
-            command.Parameters.AddWithValue("@CustomerID", customerId);
+            SqlCommand command = new SqlCommand("DELETE FROM Customer WHERE id = @customerid", connection);
+            command.Parameters.AddWithValue("@customerid", customerId);
             rowsAffected = command.ExecuteNonQuery();
 
             connection.Close();
@@ -161,9 +161,9 @@ class ShopWriter : IShopWriter
         {
             connection.Open();
 
-            SqlCommand command = new SqlCommand("INSERT INTO BestellungsArtikel (BestellungsID, ArtikelID) VALUES (@BestellungsID, @ArtikelID)", connection);
-            command.Parameters.AddWithValue("@BestellungsID", Convert.ToInt32(orderId));
-            command.Parameters.AddWithValue("@ArtikelID", Convert.ToInt32(articleId));
+            SqlCommand command = new SqlCommand("INSERT INTO OrderArticle (orderid, articleid) VALUES (@orderid, @articleid)", connection);
+            command.Parameters.AddWithValue("@orderid", Convert.ToInt32(orderId));
+            command.Parameters.AddWithValue("@articleid", Convert.ToInt32(articleId));
 
             command.ExecuteNonQuery();
             Console.WriteLine($"Artikel mit der ID {articleId} mit der Bestellung mit ID {orderId} erfolgreich verbunden.");
@@ -210,10 +210,10 @@ class ShopWriter : IShopWriter
 
             connection.Open();
 
-            SqlCommand command = new SqlCommand("INSERT INTO Bestellungen (ID, Bezahlt, Gesamtpreis) VALUES (@ID, @Bezahlt, @Gesamtpreis)", connection);
-            command.Parameters.AddWithValue("@ID", Convert.ToInt32(orderData.id));
-            command.Parameters.AddWithValue("@Bezahlt", Convert.ToBoolean(orderData.payd));
-            command.Parameters.AddWithValue("@Gesamtpreis", Convert.ToDouble(orderData.totalPrice));
+            SqlCommand command = new SqlCommand("INSERT INTO Orders (id, payd, totalPrice) VALUES (@id, @payd, @totalPrice)", connection);
+            command.Parameters.AddWithValue("@id", Convert.ToInt32(orderData.id));
+            command.Parameters.AddWithValue("@payd", Convert.ToBoolean(orderData.payd));
+            command.Parameters.AddWithValue("@totalPrice", Convert.ToDouble(orderData.totalPrice));
 
             command.ExecuteNonQuery();
             Console.WriteLine($"Bestellung mit ID {orderData.id} erfolgreich angelegt.");
@@ -234,7 +234,7 @@ class ShopWriter : IShopWriter
         }
         catch (Exception e)
         {
-            Console.WriteLine("Fehler beim Hinzufügen des Kunden: " + e.Message);
+            Console.WriteLine("Fehler beim hinzufügen der Bestellung: " + e.Message);
             if (connection != null && connection.State == ConnectionState.Open)
             {
                 connection.Close();
@@ -258,8 +258,8 @@ class ShopWriter : IShopWriter
         {
             connection.Open();
 
-            SqlCommand command = new SqlCommand("DELETE FROM BestellungsArtikel WHERE BestellungsID = @orderID", connection);
-            command.Parameters.AddWithValue("@orderID", orderId);
+            SqlCommand command = new SqlCommand("DELETE FROM OrderArticle WHERE orderid = @orderid", connection);
+            command.Parameters.AddWithValue("@orderid", orderId);
             rowsAffected = command.ExecuteNonQuery();
 
             connection.Close();
@@ -295,8 +295,8 @@ class ShopWriter : IShopWriter
 
             connection.Open();
 
-            SqlCommand command = new SqlCommand("DELETE FROM Bestellungen WHERE ID = @orderID", connection);
-            command.Parameters.AddWithValue("@orderID", orderId);
+            SqlCommand command = new SqlCommand("DELETE FROM Orders WHERE id = @orderid", connection);
+            command.Parameters.AddWithValue("@orderid", orderId);
             rowsAffected = command.ExecuteNonQuery();
 
             connection.Close();

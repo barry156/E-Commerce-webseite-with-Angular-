@@ -11,6 +11,17 @@ class Program
 {
     static void Main(string[] args)
     {
+        Console.WriteLine("Try to build Tables ...");
+        IDatabaseTableCreator creator = new DatabaseTableCreator();
+        if (creator.CreateTables() == 1)
+        {
+            Console.WriteLine("... Tables where created.");
+        }
+        else
+        {
+            Console.WriteLine("... Tables allready exist or Error, see console.");
+        }
+
         // Test Reader
         Console.WriteLine("Test Reader");
         // Setup
