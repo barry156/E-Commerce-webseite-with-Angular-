@@ -113,7 +113,7 @@ namespace Store_DataAccessLayer_Bib_PostgreSQL
                 JsonDocument jsonDocument = JsonDocument.Parse(json);
                 if (jsonDocument.RootElement.EnumerateObject().Count() == 2)
                 {
-                    JsonProperty propertyUser = jsonDocument.RootElement.EnumerateObject().First();
+                    JsonProperty propertyUser = jsonDocument.RootElement.EnumerateObject().Last();
                     if (propertyUser.Value.ValueKind == JsonValueKind.Number)
                     {
                         userId = propertyUser.Value.GetInt32();
@@ -178,24 +178,8 @@ namespace Store_DataAccessLayer_Bib_PostgreSQL
             try
             {
                 Order order = new();
-                JsonDocument jsonDocument = JsonDocument.Parse(json);
-                if (jsonDocument.RootElement.EnumerateObject().Count() == 1)
-                {
-                    JsonProperty property = jsonDocument.RootElement.EnumerateObject().First();
-                    if (property.Value.ValueKind == JsonValueKind.Number)
-                    {
-                        int id = property.Value.GetInt32();
-                        order = DatabaseHandler.Instance.getOrderFromDB(id);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Der Wert ist kein int.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Das JSON enthält nicht genau ein Property.");
-                }
+                int id = JsonSerializer.Deserialize<int>(json);
+                order = DatabaseHandler.Instance.getOrderFromDB(id);
                 return JsonSerializer.Serialize(order);
             }
             catch (Exception ex)

@@ -1,6 +1,4 @@
-﻿using Store_DataAccessLayer_PostgreSQL.Models;
-
-namespace Store_ApplicationLayer.Models
+﻿namespace Store_ApplicationLayer.Models
 {
     public class Model_Login
     {

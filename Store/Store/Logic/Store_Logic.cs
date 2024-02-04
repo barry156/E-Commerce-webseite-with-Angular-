@@ -200,8 +200,12 @@ namespace Store_ApplicationLayer.Logic
                 foreach (ProductFromOrder product in cart.products)
                 {
                     Model_Product compProduct = getProductFromDB(product.id);
-                    totalPrice += (compProduct.price * product.amount);
-                    model_UICart.products.Add(compProduct);
+                    if (compProduct != null)
+                    {
+                        totalPrice += (compProduct.price * product.amount);
+                        compProduct.amount = product.amount;
+                        model_UICart.products.Add(compProduct);
+                    }
                 }
                 model_UICart.total_price = totalPrice;
                 return model_UICart;
