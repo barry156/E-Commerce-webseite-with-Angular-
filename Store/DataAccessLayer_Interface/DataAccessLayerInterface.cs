@@ -1,6 +1,6 @@
-﻿namespace Store_DataAccessLayer_Bib_PostgreSQL
+﻿namespace DataAccessLayer_Interface
 {
-    public interface BackEndInterface
+    public interface DataAccessLayerInterface
     {
         public string Login(string json);
         public string Register(string json);

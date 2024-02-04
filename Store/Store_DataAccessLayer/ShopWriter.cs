@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 class ShopWriter : IShopWriter
 {
-    private string CONNECTION_STRING = "Data Source=DESKTOP-ODAGOGJ\\SQLEXPRESS;Initial Catalog=ShopDB;User ID=shopUser;Password=123456789;";
+    private string CONNECTION_STRING = "Data Source=(localdb)\\Local;Initial Catalog=ShopDB;Integrated Security=True";
     private SqlConnection connection;
 
     public ShopWriter()
@@ -27,14 +27,14 @@ class ShopWriter : IShopWriter
 
             connection.Open();
 
-            SqlCommand command = new SqlCommand("INSERT INTO Article (id, name, url, price) VALUES (@id, @name, @url, @price)", connection);
+            SqlCommand command = new SqlCommand("INSERT INTO Article (name, url, price) VALUES (@name, @url, @price)", connection);
             /*
             command.Parameters.AddWithValue("@ID", articleData.id);
             command.Parameters.AddWithValue("@Name", articleData.name);
             command.Parameters.AddWithValue("@Preis", articleData.price);
             */
 
-            command.Parameters.AddWithValue("@id", Convert.ToInt32(articleData.id));
+            //command.Parameters.AddWithValue("@id", Convert.ToInt32(articleData.id));
             command.Parameters.AddWithValue("@name", articleData.name.ToString());
             command.Parameters.AddWithValue("@url", articleData.url.ToString());
             command.Parameters.AddWithValue("@price", Convert.ToDouble(articleData.price));

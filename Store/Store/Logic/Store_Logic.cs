@@ -1,7 +1,6 @@
-﻿using ServiceStack;
+﻿using DataAccessLayer_Interface;
 using Store_ApplicationLayer.Models;
-using Store_DataAccessLayer_Bib_PostgreSQL;
-using Store_DataAccessLayer_PostgreSQL.Models;
+using Store_DataAccessLayer;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -9,7 +8,7 @@ namespace Store_ApplicationLayer.Logic
 {
     public static class Store_Logic
     {
-        private static readonly BackEndInterface db = new BackEndHandler();
+        private static readonly DataAccessLayerInterface db = new BackEndHandler_SQL();
 
         #region Login & Register
         public static Model_Logic_Login checkLoginData(Model_Login userFromRequest)
@@ -99,6 +98,10 @@ namespace Store_ApplicationLayer.Logic
             try
             {
                 string resultJson = db.Login(JsonSerializer.Serialize(new Model_UserRequest() { email = email }));
+                if (resultJson == null || resultJson == "{}")
+                {
+                    return null;
+                }
                 return JsonSerializer.Deserialize<Model_Login>(resultJson);
             }
             catch (Exception ex)
@@ -196,8 +199,8 @@ namespace Store_ApplicationLayer.Logic
                 double totalPrice = 0;
                 Model_UICart model_UICart = new();
                 string resultJson = db.getOrder(JsonSerializer.Serialize(userId));
-                Model_Cart cart = JsonSerializer.Deserialize<Model_Cart>(resultJson);
-                foreach (ProductFromOrder product in cart.products)
+                List<ProductFromOrder> cart = JsonSerializer.Deserialize<List<ProductFromOrder>>(resultJson);
+                foreach (ProductFromOrder product in cart)
                 {
                     Model_Product compProduct = getProductFromDB(product.id);
                     if (compProduct != null)
