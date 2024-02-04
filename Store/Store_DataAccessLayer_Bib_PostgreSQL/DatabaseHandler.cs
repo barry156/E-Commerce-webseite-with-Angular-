@@ -24,13 +24,17 @@ namespace Store_DataAccessLayer_PostgreSQL
                 }
                 string path = Path.Combine(DATABASE_PATH, DATABASE_FILENAME);
                 dbFactory = new OrmLiteConnectionFactory(path, SqliteDialect.Provider);
+                bool alreadyCreated = false;
                 using (var db = dbFactory.Open())
                 {
                     db.CreateTableIfNotExists<User>();
-                    db.CreateTableIfNotExists<Product>();
+                    alreadyCreated = db.CreateTableIfNotExists<Product>();
                     db.CreateTableIfNotExists<Order>();
                 }
-                addDefaultProducts();
+                if (alreadyCreated)
+                {
+                    addDefaultProducts();
+                }
             }
             catch (Exception ex)
             {
@@ -135,14 +139,20 @@ namespace Store_DataAccessLayer_PostgreSQL
                     else
                     {
                         int amount = 0;
+                        bool found = false;
                         foreach (OrderEntity entity in order.order_entitys)
                         {
                             if (entity.product_id == productId)
                             {
                                 entity.amount += 1;
                                 amount = entity.amount;
+                                found = true;
                                 break;
                             }
+                        }
+                        if (!found)
+                        {
+                            order.order_entitys.Add(new() { amount = 1, product_id = productId });
                         }
                         db.Update(order);
                         return amount;
@@ -207,6 +217,7 @@ namespace Store_DataAccessLayer_PostgreSQL
                 using (var db = dbFactory.Open())
                 {
                     Order order = db.Select<Order>(x => x.user_id == id).FirstOrDefault();
+                    return order;
                 }
             }
             catch (Exception ex)

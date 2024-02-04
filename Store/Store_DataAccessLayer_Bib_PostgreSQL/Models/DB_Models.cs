@@ -47,7 +47,7 @@ namespace Store_DataAccessLayer_PostgreSQL.Models
         [JsonIgnore]
         public int user_id { get; set; }
 
-        [JsonPropertyName("")]
+        [JsonPropertyName("products")]
         public List<OrderEntity> order_entitys { get; set; }
 
         [JsonIgnore]
@@ -56,7 +56,7 @@ namespace Store_DataAccessLayer_PostgreSQL.Models
 
     public class OrderEntity
     {
-        [JsonPropertyName("productId)")]
+        [JsonPropertyName("id")]
         public int product_id { get; set; }
 
         public int amount { get; set; }
