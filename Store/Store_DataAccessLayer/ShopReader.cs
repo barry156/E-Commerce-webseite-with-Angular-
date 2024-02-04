@@ -292,7 +292,7 @@ class ShopReader : IShopReader{
             {
                 dynamic orderItem = new
                 {
-                    productId = Convert.ToInt32(reader["articleid"]),
+                    id = Convert.ToInt32(reader["articleid"]),
                     amount = Convert.ToInt32(reader["articleAmount"])
                 };
 
