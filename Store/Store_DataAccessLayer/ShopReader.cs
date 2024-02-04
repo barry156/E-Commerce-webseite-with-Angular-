@@ -43,6 +43,7 @@ class ShopReader : IShopReader{
                 {
                     id = Convert.ToInt32(reader["id"]),
                     name = reader["name"].ToString(),
+                    url = reader["url"].ToString(),
                     price = Convert.ToDecimal(reader["price"])
                 };
 
@@ -81,6 +82,7 @@ class ShopReader : IShopReader{
                 {
                     id = Convert.ToInt32(reader["id"]),
                     name = reader["name"].ToString(),
+                    url = reader["url"].ToString(),
                     price = Convert.ToDecimal(reader["price"])
                 };
             }
@@ -154,6 +156,7 @@ class ShopReader : IShopReader{
                 {
                     id      = Convert.ToInt32(reader["id"]),
                     name    = reader["name"].ToString(),
+                    url = reader["url"].ToString(),
                     price   = Convert.ToDecimal(reader["price"])
                 };
                 articleList.Add(article);
@@ -280,6 +283,7 @@ class ShopReader : IShopReader{
             }
             List<dynamic> orderList = new List<dynamic>();
 
+            connection.Open();
             SqlCommand command = new SqlCommand("SELECT articleid, articleAmount FROM OrderArticle WHERE orderid = @orderid", connection);
             command.Parameters.AddWithValue("@orderid", orderId);
             SqlDataReader reader = command.ExecuteReader();
@@ -288,7 +292,7 @@ class ShopReader : IShopReader{
             {
                 dynamic orderItem = new
                 {
-                    productId = Convert.ToInt32(reader["articleid"]),
+                    id = Convert.ToInt32(reader["articleid"]),
                     amount = Convert.ToInt32(reader["articleAmount"])
                 };
 
