@@ -1,8 +1,9 @@
 import { Component, DoCheck } from '@angular/core';
-import { ProductCart, ShoppingcartService } from '../contact/shoppingcart.service';
-import { Product } from '../model/product_model';
+import { ShoppingcartService } from '../contact/shoppingcart.service';
+import { Product, ProductInBackend } from '../model/product_model';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { AuthentificationService } from '../authentification.service';
 
 
 
@@ -15,12 +16,28 @@ export class CartComponent implements DoCheck {
   subTotal!: number;
   shipping = 10;
 
-  products: ProductCart[] = [];
+  products: ProductInBackend[] = [
+    {
+      id:1,
+      name: 'Buch',
+      price: 223,
+      url : 'grgr',
+      amount: 23
+    },
+    {
+      id:2,
+      name: 'Buch',
+      price: 223,
+      url : 'grgr',
+      amount: 23
+    },
+];
 
-  constructor(private shoppingCartService: ShoppingcartService, private router: Router) {}
+  constructor(private shoppingCartService: ShoppingcartService, private router: Router,
+    private authService: AuthentificationService) {}
 
   ngDoCheck() {
-   this.products = this.shoppingCartService.getAllProducts();
+   //this.products = this.shoppingCartService.getAllProducts();
    this.shoppingCartService.getShoppingCartFromBackend()
       .subscribe((data) => {
        // this.products = data.products;
@@ -30,25 +47,87 @@ export class CartComponent implements DoCheck {
     
     
   }
+  //code for the backend
+  removeProductFromCardInBackend(product: Product) {
+    const userId = this.authService.idOfLoggedUser;
+    this.shoppingCartService.removeProductFromCardInBackend(product.id , userId).subscribe(
+      {
+        next: (response) => {
+          alert("product removed froms the cart  successfully");
+          console.log(response);
+          
+        },
+        error :(error) =>  {
+          console.error('Error :', error);
+         
+        }
+  
+      }
 
-  remove(product: Product) {
+    )
+
+  }
+
+  increaseProductQuantityFromBackend(product : Product)  {
+    const userId = this.authService.idOfLoggedUser;
+    this.shoppingCartService.increaseProductQuantityFromBackend(product.id , userId).subscribe(
+      {
+        next: (response) => {
+          alert("product removed froms the cart  successfully");
+          console.log(response);
+          
+        },
+        error :(error) =>  {
+          console.error('Error :', error);
+         
+        }
+  
+      }
+
+    )
+
+  }
+  decreaseProductQuantityFromBackend(product : Product)  {
+    const userId = this.authService.idOfLoggedUser;
+    this.shoppingCartService.decreaseProductQuantityFromBackend(product.id , userId).subscribe(
+      {
+        next: (response) => {
+          alert("product removed froms the cart  successfully");
+          console.log(response);
+          
+        },
+        error:(error) =>  {
+          console.error('Error :', error);
+         
+        }
+  
+      }
+
+    )
+
+  }
+
+
+  //
+
+  /*remove(product: Product) {
     this.shoppingCartService.removeProduct(product);
-  }
+  }*/
 
-  decreaseQuantity(product: ProductCart) {
-    if (product.cartQuantity && product.cartQuantity > 1) {
-      product.cartQuantity--;
+  decreaseQuantity(product: ProductInBackend) {
+    if (product.amount && product.amount > 1) {
+      product.amount--;
     }
   }
 
-  increaseQuantity(product: ProductCart) { 
-    if(product.cartQuantity ) {
-      product.cartQuantity++;
+  increaseQuantity(product: ProductInBackend) { 
+    if(product.amount ) {
+      product.amount++;
     }
   }
-  calculateTotal(productCart: ProductCart[]): number {
+  calculateTotal(productCart: ProductInBackend[]): number {
     return productCart.reduce((total, product) => {
-      return total + (product.price * (product.cartQuantity || 0));
+      return total + (product.price * (product.amount || 0));
     }, 0);
   }
 
