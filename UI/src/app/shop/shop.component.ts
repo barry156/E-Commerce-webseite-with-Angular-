@@ -112,6 +112,7 @@ export class ShopComponent {
 
   }*/
   addProductToShoppingCartInBackend(product : ProductInBackend , event : Event)   {
+    
   
     event.preventDefault();
     this.shoppingCartService.addProductToCartInBackend(product.id , this.authService.idOfLoggedUser).subscribe(
