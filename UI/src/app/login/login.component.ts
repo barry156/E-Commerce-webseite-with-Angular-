@@ -17,7 +17,7 @@ export class LoginComponent  {
 
   onSubmit(f: NgForm) {
     
-    this.authService.login(f.value).subscribe( {
+    this.authService.register(f.value).subscribe( {
       next: (response) =>  {
         debugger;
         console.log(response);

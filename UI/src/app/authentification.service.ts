@@ -15,9 +15,9 @@ export class AuthentificationService {
 
   constructor(private http: HttpClient ) {}
 
-  login(value : any): Observable<any> {
+  register(value : any): Observable<any> {
   
-    return this.http.post(`${this.apiUrl2}/login`,value);
+    return this.http.post(`${this.apiUrl2}/register`,value);
   }
   getProduct()  {
     return this.http.get(`${this.apiUrl1}`);
