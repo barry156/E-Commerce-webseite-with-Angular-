@@ -39,39 +39,6 @@ export class ShopComponent {
         this.products = data;
         
       });
-      // test purpose
-    /*this.products = [
-        {
-          id : 1,
-          name : 'product 1',
-          price : 100 ,
-          
-          url : 'assets/img/product-1.jpg',
-          
-        },
-        
-        {
-          id : 2,
-          name : 'product 1',
-          price : 99 ,
-         
-          url : 'assets/img/product-2.jpg',
-          
-          
-        },
-        {
-          id : 3,
-          name : 'product 1',
-          price : 123 ,
-          url : 'assets/img/product-3.jpg',
-          
-          
-        },
-      ]*/
-    
-    /*this.filteredProducts = [...this.products];
-    const priceRange = document.getElementById('priceRange') as HTMLInputElement;
-    const priceValue = document.getElementById('priceValue') as HTMLSpanElement;*/
    
   }
 
@@ -86,38 +53,16 @@ export class ShopComponent {
     this.products = this.products
       .filter(product => (event.target as HTMLInputElement)?.value && product.price < parseInt((event.target as HTMLInputElement).value));
   
-    /*if (this.checkedColors && this.checkedColors.length > 0) {
-      this.products = this.products.filter(product => this.checkedColors.includes(product.color[0]) && product.price <= this.changeResult);
-    }*/
   }
   
-  
-
- /*onColorCheckBoxChange(event: Event) {
-    const selectedColorId = (event.target as HTMLElement)?.id;
-    const findIndexOfColorSelected = this.colorFilter.findIndex(color => color.id === selectedColorId);
-  
-    if (findIndexOfColorSelected !== -1) {
-      this.colorFilter[findIndexOfColorSelected].check = (event.target as HTMLInputElement)?.checked;
-    }
-    this.checkedColors = this.colorFilter.filter(color =>color.check).map(color =>color.name);
-   
-  
-    this.products = this.productsService.products.filter(product => this.checkedColors.includes(product.color[0]) && product.price <= this.changeResult);
-  }*/
-  /*addProductToShoppingCart(product: ProductInBackend , event : Event)  {
-    event.preventDefault();
-    this.shoppingCartService.addProduct(product);
-    console.log(this.shoppingCartService.getAllProducts());
-
-  }*/
   addProductToShoppingCartInBackend(product : ProductInBackend , event : Event)   {
     
   
     event.preventDefault();
     this.shoppingCartService.addProductToCartInBackend(product.id , this.authService.idOfLoggedUser).subscribe(
       (response) =>  {
-        alert('product added in the cart successfully');
+        console.log("product added in the cart successfully");
+       // this.shoppingCartService.shoppingCart.length ++;
 
       },
       (error) =>  {

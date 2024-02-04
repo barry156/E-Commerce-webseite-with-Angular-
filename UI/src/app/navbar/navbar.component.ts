@@ -29,12 +29,7 @@ ngDoCheck() {
 
 
   hideElementInOtherComponent() {
-    /*const categoriesToggle = document.querySelector('#navbar-vertical');
-    if(this.showCaroussel) {
-      this.showCaroussel = false;
-      categoriesToggle?.classList.toggle('show');
-      this.caroussel.nativeElement.style.display = 'none';
-    }*/
+    
   }
   deconnexion()  {
     this.authService.userIsLogged = false;

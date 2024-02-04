@@ -1,6 +1,6 @@
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { ShoppingcartService } from '../contact/shoppingcart.service';
-import { Product, ProductInBackend } from '../model/product_model';
+import { Product, ProductInBackend, ShoppingCartResponse } from '../model/product_model';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthentificationService } from '../authentification.service';
@@ -12,40 +12,26 @@ import { AuthentificationService } from '../authentification.service';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss']
 })
-export class CartComponent implements DoCheck {
+export class CartComponent implements OnInit {
   subTotal!: number;
   shipping = 10;
 
-  products: ProductInBackend[] = [
-    {
-      id:1,
-      name: 'Buch',
-      price: 223,
-      url : 'grgr',
-      amount: 23
-    },
-    {
-      id:2,
-      name: 'Buch',
-      price: 223,
-      url : 'grgr',
-      amount: 23
-    },
-];
+  products: ProductInBackend[] = [];
 
   constructor(private shoppingCartService: ShoppingcartService, private router: Router,
     private authService: AuthentificationService) {}
 
-  ngDoCheck() {
-   //this.products = this.shoppingCartService.getAllProducts();
-   this.shoppingCartService.getShoppingCartFromBackend()
-      .subscribe((data) => {
-       // this.products = data.products;
-        
-      });
-    this.subTotal = this.calculateTotal(this.products);
-    
-    
+  ngOnInit() {
+      this.shoppingCartService.getShoppingCartFromBackend().subscribe(
+        (response: any) => {
+          this.products = response?.products;
+          this.subTotal = response?.total_price;
+        },
+        (error) =>  {
+          console.error('Error:', error);
+        }
+      );
+       
   }
   //code for the backend
   removeProductFromCardInBackend(product: Product) {
@@ -53,7 +39,8 @@ export class CartComponent implements DoCheck {
     this.shoppingCartService.removeProductFromCardInBackend(product.id , userId).subscribe(
       {
         next: (response) => {
-          alert("product removed froms the cart  successfully");
+          this.ngOnInit();
+         
           console.log(response);
           
         },
@@ -70,10 +57,11 @@ export class CartComponent implements DoCheck {
 
   increaseProductQuantityFromBackend(product : Product)  {
     const userId = this.authService.idOfLoggedUser;
-    this.shoppingCartService.increaseProductQuantityFromBackend(product.id , userId).subscribe(
+    this.shoppingCartService.addProductToCartInBackend(product.id , userId).subscribe(
       {
         next: (response) => {
-          alert("product removed froms the cart  successfully");
+          this.ngOnInit();
+          
           console.log(response);
           
         },
@@ -92,7 +80,7 @@ export class CartComponent implements DoCheck {
     this.shoppingCartService.decreaseProductQuantityFromBackend(product.id , userId).subscribe(
       {
         next: (response) => {
-          alert("product removed froms the cart  successfully");
+          this.ngOnInit();
           console.log(response);
           
         },
@@ -106,13 +94,6 @@ export class CartComponent implements DoCheck {
     )
 
   }
-
-
-  //
-
-  /*remove(product: Product) {
-    this.shoppingCartService.removeProduct(product);
-  }*/
 
   decreaseQuantity(product: ProductInBackend) {
     if (product.amount && product.amount > 1) {

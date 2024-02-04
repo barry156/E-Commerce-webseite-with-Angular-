@@ -22,3 +22,8 @@ export class ProductInBackend extends Product {
     }
 
 }
+export interface ShoppingCartResponse {
+    products: any[];  
+    total_price: number;  
+    
+}
