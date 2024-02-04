@@ -173,8 +173,7 @@ namespace Store_ApplicationLayer.Controller
                     throw new Exception("userId is null");
                 }
                 Console.WriteLine($"Get cart request, userId: {userId}");
-                Model_Cart cart = Store_Logic.getCartFromDB(userId);
-                cart.id = userId;
+                Model_UICart cart = Store_Logic.getCartFromDB(userId);
                 return Ok(JsonSerializer.Serialize(cart));
             }
             catch (Exception ex)

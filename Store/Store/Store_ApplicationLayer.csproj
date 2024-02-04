@@ -10,4 +10,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Store_DataAccessLayer_Bib_PostgreSQL\Store_DataAccessLayer_Bib_SQLite.csproj" />
+  </ItemGroup>
+
 </Project>
