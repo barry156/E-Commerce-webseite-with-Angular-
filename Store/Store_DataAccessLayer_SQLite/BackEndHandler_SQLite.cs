@@ -1,13 +1,10 @@
-﻿using ServiceStack;
-using ServiceStack.Text.Json;
-using Store_DataAccessLayer_PostgreSQL;
-using Store_DataAccessLayer_PostgreSQL.Models;
+﻿using DataAccessLayer_Interface;
+using Store_DataAccessLayer_SQLite.Models;
 using System.Text.Json;
-using System.Xml.Linq;
 
-namespace Store_DataAccessLayer_Bib_PostgreSQL
+namespace Store_DataAccessLayer_SQLite
 {
-    public class BackEndHandler : BackEndInterface
+    public class BackEndHandler_SQLite : DataAccessLayerInterface
     {
         public string Login(string json)
         {
@@ -38,8 +35,7 @@ namespace Store_DataAccessLayer_Bib_PostgreSQL
             {
                 Console.WriteLine($"DataAccessLayer Error: {ex.Message}");
             }
-            Console.WriteLine("Test5");
-            return JsonSerializer.Serialize(new User());
+            return string.Empty;
         }
 
         public string Register(string json)
@@ -54,7 +50,7 @@ namespace Store_DataAccessLayer_Bib_PostgreSQL
             {
                 Console.WriteLine($"DataAccessLayer Error: {ex.Message}");
             }
-            return JsonSerializer.Serialize(new User());
+            return string.Empty;
         }
 
         public string getAllProducts()
@@ -68,7 +64,7 @@ namespace Store_DataAccessLayer_Bib_PostgreSQL
             {
                 Console.WriteLine($"DataAccessLayer Error: {ex.Message}");
             }
-            return JsonSerializer.Serialize("");
+            return string.Empty;
         }
 
         public string getProduct(string json)
@@ -100,7 +96,7 @@ namespace Store_DataAccessLayer_Bib_PostgreSQL
             {
                 Console.WriteLine($"DataAccessLayer Error: {ex.Message}");
             }
-            return JsonSerializer.Serialize(new Product());
+            return string.Empty;
         }
 
         public string addProductToCart(string json)
@@ -135,7 +131,7 @@ namespace Store_DataAccessLayer_Bib_PostgreSQL
             {
                 Console.WriteLine($"DataAccessLayer Error: {ex.Message}");
             }
-            return JsonSerializer.Serialize(-1);
+            return string.Empty;
         }
 
         public string removeProductFromCart(string json)
@@ -170,7 +166,7 @@ namespace Store_DataAccessLayer_Bib_PostgreSQL
             {
                 Console.WriteLine($"DataAccessLayer Error: {ex.Message}");
             }
-            return JsonSerializer.Serialize(-1);
+            return string.Empty;
         }
 
         public string getOrder(string json)
@@ -186,7 +182,7 @@ namespace Store_DataAccessLayer_Bib_PostgreSQL
             {
                 Console.WriteLine($"DataAccessLayer Error: {ex.Message}");
             }
-            return JsonSerializer.Serialize(new Order());
+            return string.Empty;
         }
     }
 }

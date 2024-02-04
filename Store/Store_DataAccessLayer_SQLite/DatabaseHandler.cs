@@ -1,7 +1,7 @@
 ﻿using ServiceStack.OrmLite;
-using Store_DataAccessLayer_PostgreSQL.Models;
+using Store_DataAccessLayer_SQLite.Models;
 
-namespace Store_DataAccessLayer_PostgreSQL
+namespace Store_DataAccessLayer_SQLite
 {
     public sealed class DatabaseHandler
     {

@@ -11,7 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Store_DataAccessLayer_Bib_PostgreSQL\Store_DataAccessLayer_Bib_SQLite.csproj" />
+    <ProjectReference Include="..\DataAccessLayer_Interface\DataAccessLayer_Interface.csproj" />
+    <ProjectReference Include="..\Store_DataAccessLayer\Store_DataAccessLayer.csproj" />
+    <ProjectReference Include="..\Store_DataAccessLayer_SQLite\Store_DataAccessLayer_SQLite.csproj" />
   </ItemGroup>
 
 </Project>

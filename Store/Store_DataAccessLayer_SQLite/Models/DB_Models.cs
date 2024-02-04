@@ -1,7 +1,7 @@
 ﻿using ServiceStack.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Store_DataAccessLayer_PostgreSQL.Models
+namespace Store_DataAccessLayer_SQLite.Models
 {
     public class User
     {

@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 class DatabaseTableCreator : IDatabaseTableCreator
 {
-    private static string CONNECTION_STRING = "Data Source=DESKTOP-ODAGOGJ\\SQLEXPRESS;Initial Catalog=ShopDB;User ID=shopUser;Password=123456789;";
+    private static string CONNECTION_STRING = "Data Source=(localdb)\\Local;Initial Catalog=ShopDB;Integrated Security=True";
 
     public int CreateTables()
     {

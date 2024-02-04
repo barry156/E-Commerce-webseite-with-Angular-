@@ -10,12 +10,14 @@ using Newtonsoft.Json;
 
 //namespace ConsoleApp1
 //{
-class ShopReader : IShopReader{
+class ShopReader : IShopReader
+{
     // Verbindungszeichenfolge zur lokalen SQL Server-Datenbank
-    private string connectionString = "Data Source=DESKTOP-ODAGOGJ\\SQLEXPRESS;Initial Catalog=ShopDB;User ID=shopUser;Password=123456789;";
+    private string connectionString = "Data Source=(localdb)\\Local;Initial Catalog=ShopDB;Integrated Security=True;";
     private SqlConnection connection;
 
-    public ShopReader() {
+    public ShopReader()
+    {
         connection = new SqlConnection(connectionString);
     }
 
@@ -72,9 +74,9 @@ class ShopReader : IShopReader{
         {
             connection.Open();
 
-            SqlCommand command      = new SqlCommand("SELECT * FROM Article WHERE id = @articleid", connection);
+            SqlCommand command = new SqlCommand("SELECT * FROM Article WHERE id = @articleid", connection);
             command.Parameters.AddWithValue("@articleid", articleID);
-            SqlDataReader reader    = command.ExecuteReader();
+            SqlDataReader reader = command.ExecuteReader();
 
             if (reader.Read())
             {
@@ -102,34 +104,37 @@ class ShopReader : IShopReader{
     }
 
     // LISTEN ABFRAGEN
-    public string ReadAllCustomer() 
+    public string ReadAllCustomer()
     {
         //List<Customer> customerList = new List<Customer>();
         List<dynamic> customerList = new List<dynamic>();
 
-        try {
+        try
+        {
             connection.Open();
 
-            SqlCommand command      = new SqlCommand("SELECT * FROM Customer", connection);
-            SqlDataReader reader    = command.ExecuteReader();
+            SqlCommand command = new SqlCommand("SELECT * FROM Customer", connection);
+            SqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
                 dynamic customer = new
                 {
-                    id              = Convert.ToInt32(reader["id"]),
-                    name            = reader["name"].ToString(),
-                    password        = reader["password"].ToString(),
-                    email           = reader["email"].ToString(),
-                    orders          = "" //reader["bestellungen"].ToString()
+                    id = Convert.ToInt32(reader["id"]),
+                    name = reader["name"].ToString(),
+                    password = reader["password"].ToString(),
+                    email = reader["email"].ToString(),
+                    orders = "" //reader["bestellungen"].ToString()
                 };
                 customerList.Add(customer);
             }
             connection.Close();
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             Console.WriteLine("Fehler beim Verbindungsaufbau: " + e.Message);
-            if (connection != null && connection.State == ConnectionState.Open) {
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
                 connection.Close();
             }
         }
@@ -147,17 +152,17 @@ class ShopReader : IShopReader{
         {
             connection.Open();
 
-            SqlCommand command      = new SqlCommand("SELECT * FROM Article", connection);
-            SqlDataReader reader    = command.ExecuteReader();
+            SqlCommand command = new SqlCommand("SELECT * FROM Article", connection);
+            SqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
                 dynamic article = new
                 {
-                    id      = Convert.ToInt32(reader["id"]),
-                    name    = reader["name"].ToString(),
+                    id = Convert.ToInt32(reader["id"]),
+                    name = reader["name"].ToString(),
                     url = reader["url"].ToString(),
-                    price   = Convert.ToDecimal(reader["price"])
+                    price = Convert.ToDecimal(reader["price"])
                 };
                 articleList.Add(article);
             }
@@ -184,9 +189,9 @@ class ShopReader : IShopReader{
         try
         {
             connection.Open();
-            
-            SqlCommand command      = new SqlCommand("SELECT * FROM Orders", connection);
-            SqlDataReader reader    = command.ExecuteReader();
+
+            SqlCommand command = new SqlCommand("SELECT * FROM Orders", connection);
+            SqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
@@ -207,7 +212,8 @@ class ShopReader : IShopReader{
             }
             connection.Close();
 
-            foreach (var order in orderList) {
+            foreach (var order in orderList)
+            {
                 int orderId = order.id;
                 dynamic articleListForOrder = JsonConvert.DeserializeObject(GetArticlesByOrderID(orderId));
                 dynamic orderReturn = new
@@ -272,7 +278,7 @@ class ShopReader : IShopReader{
         return customerJson; // JsonConvert.SerializeObject(customerList, Formatting.Indented);
     }
 
-    public string getOrder(int customerId) 
+    public string getOrder(int customerId)
     {
         try
         {

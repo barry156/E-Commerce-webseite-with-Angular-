@@ -1,4 +1,6 @@
-﻿namespace Store_ApplicationLayer.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Store_ApplicationLayer.Models
 {
     public class Model_Login
     {
@@ -14,11 +16,6 @@
         public double price { get; set; }
         public string url { get; set; }
         public int amount { get; set; } = 0;
-    }
-
-    public class Model_Cart
-    {
-        public List<ProductFromOrder> products { get; set; } = new();
     }
 
     public class Model_UICart
