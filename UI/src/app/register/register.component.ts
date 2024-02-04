@@ -13,7 +13,7 @@ export class RegisterComponent {
 
   oneSubmit(f: NgForm)   {
     
-    this.authService.login(f.value).subscribe( {
+    this.authService.register(f.value).subscribe( {
       next: (response) => {
         console.log("registration successfull");
         this.router.navigateByUrl('/login');

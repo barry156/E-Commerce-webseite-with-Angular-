@@ -27,13 +27,13 @@
                             <td class="align-middle">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                     <div class="input-group-btn">
-                                        <button (click)="decreaseQuantity(this.product)" class="btn btn-sm btn-primary btn-minus">
+                                        <button (click)="decreaseProductQuantityFromBackend(this.product)" class="btn btn-sm btn-primary btn-minus">
                                         <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
                                     <input type="text" class="form-control" [value]="product.amount" form-control-sm bg-secondary text-center>
                                     <div class="input-group-btn">
-                                        <button (click)="increaseQuantity(this.product)" class="btn btn-sm btn-primary btn-plus">
+                                        <button (click)="increaseProductQuantityFromBackend(this.product)" class="btn btn-sm btn-primary btn-plus">
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </div>
@@ -51,14 +51,7 @@
             </div>
         
         <div class="col-lg-4">
-            <!--<form class="mb-5" action="">
-                <div class="input-group">
-                    <input type="text" class="form-control p-4" placeholder="Coupon Code">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary">Apply Coupon</button>
-                    </div>
-                </div>
-            </form>-->
+    
             <div class="card border-secondary mb-5">
                 <div class="card-header bg-secondary border-0">
                     <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>

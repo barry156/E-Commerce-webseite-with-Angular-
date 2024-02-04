@@ -19,7 +19,11 @@ export class LoginComponent  {
     
     this.authService.login(f.value).subscribe( {
       next: (response) =>  {
+        
+        console.log(response);
        this.authService.userIsLogged = true; 
+       this.authService.idOfLoggedUser = response;
+       
        this.router.navigateByUrl('/shop');
         
         console.log("login  is successfull");

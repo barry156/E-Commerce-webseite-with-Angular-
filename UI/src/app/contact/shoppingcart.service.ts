@@ -10,35 +10,15 @@ import { AuthentificationService } from '../authentification.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ShoppingcartService {
+export class ShoppingcartService{ 
   constructor(private productService: ProductsService,private http : HttpClient , private authService: AuthentificationService) { }
 
   shoppingCart: ProductInBackend[] = [];
+  
 
-  /*addProduct(product: ProductInbackend) {
-    // find the product in  the Cart
-    const findProduct = this.shoppingCart.find(p => p.id === product.id);
-
-    // if the product is in the cart , increase the quantity
-    if (findProduct) {
-      findProduct.amount = (findProduct.amount || 0) + 1;
-    } else {
-      // else add the product with an initial value of 1
-      const productWithQuantity: ProductCart = { ...product, amount: 1 };
-      this.shoppingCart.push(productWithQuantity);
-    }
-  }
-
-  removeProduct(product: ProductInbackend) {
-    const index = this.shoppingCart.findIndex(p => p === product);
-
-    if (index !== -1) {
-      this.shoppingCart.splice(index, 1);
-    }
-  }*/
   removeProductFromCardInBackend(productId : number , userId: number) : Observable <any> {
-    const apiUrl = `http://127.0.0.1:7136/api/ui/put/product/${productId}-${userId}`;
-    return this.http.post(apiUrl,{})
+    const apiUrl = `http://127.0.0.1:7136/api/ui/delete/product/all/${productId}-${userId}`;
+    return this.http.delete(apiUrl);
   }
 
   getAllProducts(): ProductInBackend[] {
@@ -59,7 +39,7 @@ export class ShoppingcartService {
     const userId = this.authService.idOfLoggedUser;
     const apiUrl =`http://127.0.0.1:7136/api/ui/get/cart/${userId}`;
    
-    return this.http.get<{id : number , products: ProductInbackend[]}>(apiUrl);
+    return this.http.get(apiUrl);
 
   }
   increaseProductQuantityFromBackend(productId: number , userId : number): Observable <any>   {
@@ -68,8 +48,8 @@ export class ShoppingcartService {
 
   }
   decreaseProductQuantityFromBackend (productId: number , userId : number): Observable <any>   {
-    const apiUrl ="";
-    return this.http.post(apiUrl ,{});
+    const apiUrl =`http://127.0.0.1:7136/api/ui/delete/product/${productId}-${userId}`;
+    return this.http.delete(apiUrl);
   
   }
 
