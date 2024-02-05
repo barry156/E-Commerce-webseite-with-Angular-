@@ -107,7 +107,7 @@ namespace Store_PresentationLayer
             try
             {
                 HttpClient client = new();
-                HttpRequestMessage request = new(HttpMethod.Delete, $"{apiBaseUrl}ui/put/product/{productId}-{userId}");
+                HttpRequestMessage request = new(HttpMethod.Put, $"{apiBaseUrl}ui/put/product/{productId}-{userId}");
                 var response = client.Send(request);
                 response.EnsureSuccessStatusCode();
                 string result = response.Content.ReadAsStringAsync().Result;
@@ -168,6 +168,10 @@ namespace Store_PresentationLayer
                 var response = client.Send(request);
                 response.EnsureSuccessStatusCode();
                 string result = response.Content.ReadAsStringAsync().Result;
+                if (result == null || result == string.Empty || result == "{}")
+                {
+                    return null;
+                }
                 Model_Cart cart = JsonSerializer.Deserialize<Model_Cart>(result);
                 return cart;
             }

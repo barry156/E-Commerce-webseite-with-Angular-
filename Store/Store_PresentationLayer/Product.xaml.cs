@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Store_PresentationLayer
 {
@@ -29,12 +29,15 @@ namespace Store_PresentationLayer
             InitializeComponent();
             this.window = window;
             lbl_name.Content = name;
-            lbl_price.Content = price;
-            BitmapImage bimage = new BitmapImage();
-            bimage.BeginInit();
-            bimage.UriSource = new Uri(url, UriKind.Relative);
-            bimage.EndInit();
-            img_product.Source = bimage;
+            lbl_price.Content = price + " €";
+            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
+            while (directory != null && !directory.GetFiles("*.sln").Any())
+            {
+                directory = directory.Parent;
+            }
+            string parentPath = directory.Name;
+            string path = $"C:\\Users\\Maxim\\Desktop\\GitHub\\PIM-SAR_WiSe23_Gruppe14\\Images\\product-{productId}.jpg";
+            img_product.Source = new BitmapImage(new Uri(path));
             this.productId = productId;
         }
 

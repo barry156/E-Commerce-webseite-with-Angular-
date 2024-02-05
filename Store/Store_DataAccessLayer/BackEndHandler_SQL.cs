@@ -22,13 +22,25 @@ namespace Store_DataAccessLayer
             {
                 Console.WriteLine("... Tables allready exist or Error, see console.");
             }
-
-            shopWriterObj.AddArticle("{\"name\":\"product1\", \"url\":\"test\", \"price\":\"100\"}");
-            shopWriterObj.AddArticle("{\"name\":\"product2\", \"url\":\"assets/img/product-2.jpg\", \"price\":\"99\"}");
-            shopWriterObj.AddArticle("{\"name\":\"product3\", \"url\":\"assets/img/product-3.jpg\", \"price\":\"123\"}");
-            shopWriterObj.AddArticle("{\"name\":\"product4\", \"url\":\"assets/img/product-4.jpg\", \"price\":\"120\"}");
-            shopWriterObj.AddArticle("{\"name\":\"product5\", \"url\":\"assets/img/product-5.jpg\", \"price\":\"10\"}");
-            shopWriterObj.AddArticle("{\"name\":\"product6\", \"url\":\"assets/img/product-6.jpg\", \"price\":\"74.5\"}");
+            bool skipInit = true;
+            try
+            {
+                string test = shopReaderObj.ReadArticleByID(0);
+                if (test == "null")
+                {
+                    skipInit = false;
+                }
+            }
+            catch { skipInit = false; }
+            if (!skipInit)
+            {
+                shopWriterObj.AddArticle("{\"name\":\"product1\", \"url\":\"assets/img/product-1.jpg\", \"price\":\"100\"}");
+                shopWriterObj.AddArticle("{\"name\":\"product2\", \"url\":\"assets/img/product-2.jpg\", \"price\":\"99\"}");
+                shopWriterObj.AddArticle("{\"name\":\"product3\", \"url\":\"assets/img/product-3.jpg\", \"price\":\"123\"}");
+                shopWriterObj.AddArticle("{\"name\":\"product4\", \"url\":\"assets/img/product-4.jpg\", \"price\":\"120\"}");
+                shopWriterObj.AddArticle("{\"name\":\"product5\", \"url\":\"assets/img/product-5.jpg\", \"price\":\"10\"}");
+                shopWriterObj.AddArticle("{\"name\":\"product6\", \"url\":\"assets/img/product-6.jpg\", \"price\":\"74.5\"}");
+            }
         }
 
         public string Login(string json)

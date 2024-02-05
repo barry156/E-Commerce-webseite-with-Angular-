@@ -9,9 +9,9 @@
     <Border BorderThickness="2" BorderBrush="Black">
         <Grid x:Name="mainGrid">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="2"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="10"/>
@@ -22,8 +22,9 @@
             </Grid.RowDefinitions>
 
             <Label x:Name="lbl_header" Content="Store" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontStyle="Italic" FontWeight="Bold"/>
-
-            <StackPanel x:Name="stackPanel" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="3" Grid.Column="1">
+                <StackPanel x:Name="stackPanel" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </ScrollViewer>
         </Grid>
     </Border>
 </UserControl>
