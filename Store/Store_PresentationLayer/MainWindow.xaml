@@ -38,9 +38,9 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Button x:Name="btn_shop" Content="Shop" Grid.Row="1" Grid.Column="0" Height="30" MinWidth="75"/>
-                <Button x:Name="btn_cart" Content="Einkaufswagen" Grid.Row="3" Grid.Column="0" Height="30" MinWidth="75"/>
-                <Button x:Name="btn_logout" Content="Logout" Grid.Row="5" Grid.Column="0" Height="30" MinWidth="75"/>
+                <Button x:Name="btn_shop" Content="Shop" Grid.Row="1" Grid.Column="0" Height="30" MinWidth="75" PreviewMouseLeftButtonDown="btn_shop_PreviewMouseLeftButtonDown"/>
+                <Button x:Name="btn_cart" Content="Einkaufswagen" Grid.Row="3" Grid.Column="0" Height="30" MinWidth="75" PreviewMouseLeftButtonDown="btn_cart_PreviewMouseLeftButtonDown"/>
+                <Button x:Name="btn_logout" Content="Logout" Grid.Row="5" Grid.Column="0" Height="30" MinWidth="75" PreviewMouseLeftButtonDown="btn_logout_PreviewMouseLeftButtonDown"/>
             </Grid>
 
         </Grid>

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Store_ApplicationLayer.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -12,7 +14,7 @@ namespace Store_PresentationLayer
     {
         private static readonly string apiBaseUrl = "http://127.0.0.1:7136/api/";
 
-        public static bool postRegister(string email, string password)
+        public static int postRegisterRequest(string email, string password)
         {
             try
             {
@@ -27,17 +29,17 @@ namespace Store_PresentationLayer
                 int id = Int32.Parse(answer);
                 if (id > 0)
                 {
-                    return true;
+                    return id;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Beim senden der Daten ist ein Fehler unterlaufen. \nBitte kontaktieren Sie den Support. \nFehler: \n{ex.Message}", "Ein Fehler ist aufgetreten!", MessageBoxButton.OK);
             }
-            return false;
+            return -1;
         }
 
-        public static bool postLogin(string email, string password)
+        public static int postLoginRequest(string email, string password)
         {
             try
             {
@@ -52,120 +54,128 @@ namespace Store_PresentationLayer
                 int id = Int32.Parse(answer);
                 if (id > 0)
                 {
-                    return true;
+                    return id;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Beim senden der Daten ist ein Fehler unterlaufen. \nBitte kontaktieren Sie den Support. \nFehler: \n{ex.Message}", "Ein Fehler ist aufgetreten!", MessageBoxButton.OK);
             }
-            return false;
+            return -1;
         }
 
-        private void Test_get_product()
+        public static Model_Product getProductRequest(int productId)
         {
             try
             {
-
-                Console.WriteLine("Test Get Product");
-                int id = 1234;
-                client = new();
-                client.Timeout = TimeSpan.FromSeconds(10);
-                var request = new HttpRequestMessage(HttpMethod.Get, $"{GlobalConstants.apiBaseUrl}ui/get/product/{id}");
+                var client = new HttpClient();
+                var request = new HttpRequestMessage(HttpMethod.Get, $"{apiBaseUrl}ui/get/product/{productId}");
                 var response = client.Send(request);
                 response.EnsureSuccessStatusCode();
-                Console.WriteLine(response.StatusCode.ToString());
-                Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+                string result = response.Content.ReadAsStringAsync().Result;
+                Model_Product product = JsonSerializer.Deserialize<Model_Product>(result);
+                return product;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
+            return null;
         }
 
-        private void Test_get_products()
+        public static List<Model_Product> getProductsRequest()
         {
             try
             {
-
-                Console.WriteLine("Test Get Products");
-                client = new();
-                client.Timeout = TimeSpan.FromSeconds(10);
-                var request = new HttpRequestMessage(HttpMethod.Get, $"{GlobalConstants.apiBaseUrl}ui/get/products");
+                HttpClient client = new();
+                HttpRequestMessage request = new(HttpMethod.Get, $"{apiBaseUrl}ui/get/products");
                 var response = client.Send(request);
                 response.EnsureSuccessStatusCode();
-                Console.WriteLine(response.StatusCode.ToString());
-                Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+                string result = response.Content.ReadAsStringAsync().Result;
+                List<Model_Product> products = JsonSerializer.Deserialize<List<Model_Product>>(result);
+                return products;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
+            return null;
         }
 
-        private void Test_put_product()
+        public static int addProductRequest(int userId, int productId)
         {
             try
             {
-
-                Console.WriteLine("Test put Product");
-                int userId = 1234;
-                int productId = 54321;
-                client = new();
-                client.Timeout = TimeSpan.FromSeconds(10);
-                var request = new HttpRequestMessage(HttpMethod.Put, $"{GlobalConstants.apiBaseUrl}ui/put/product/{productId}-{userId}");
+                HttpClient client = new();
+                HttpRequestMessage request = new(HttpMethod.Delete, $"{apiBaseUrl}ui/put/product/{productId}-{userId}");
                 var response = client.Send(request);
                 response.EnsureSuccessStatusCode();
-                Console.WriteLine(response.StatusCode.ToString());
-                Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+                string result = response.Content.ReadAsStringAsync().Result;
+                int amount = JsonSerializer.Deserialize<int>(result);
+                return amount;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
+            return -1;
         }
 
-        private void Test_delete_product()
+        public static int deleteProductRequest(int userId, int productId)
         {
             try
             {
-
-                Console.WriteLine("Test Delete Product");
-                int userId = 1234;
-                int productId = 54321;
-                client = new();
-                client.Timeout = TimeSpan.FromSeconds(10);
-                var request = new HttpRequestMessage(HttpMethod.Delete, $"{GlobalConstants.apiBaseUrl}ui/delete/product/{productId}-{userId}");
+                HttpClient client = new();
+                HttpRequestMessage request = new(HttpMethod.Delete, $"{apiBaseUrl}ui/delete/product/{productId}-{userId}");
                 var response = client.Send(request);
                 response.EnsureSuccessStatusCode();
-                Console.WriteLine(response.StatusCode.ToString());
-                Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+                string result = response.Content.ReadAsStringAsync().Result;
+                int amount = JsonSerializer.Deserialize<int>(result);
+                return amount;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
+            return -1;
         }
 
-        private void Test_get_cart()
+        public static int deleteWholeProductRequest(int userId, int productId)
         {
             try
             {
-
-                Console.WriteLine("Test Get Cart");
-                int userId = 1234;
-                client = new();
-                client.Timeout = TimeSpan.FromSeconds(10);
-                var request = new HttpRequestMessage(HttpMethod.Get, $"{GlobalConstants.apiBaseUrl}ui/get/cart/{userId}");
+                HttpClient client = new();
+                HttpRequestMessage request = new(HttpMethod.Delete, $"{apiBaseUrl}ui/delete/product/all/{productId}-{userId}");
                 var response = client.Send(request);
                 response.EnsureSuccessStatusCode();
-                Console.WriteLine(response.StatusCode.ToString());
-                Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+                string result = response.Content.ReadAsStringAsync().Result;
+                int amount = JsonSerializer.Deserialize<int>(result);
+                return amount;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
+            return -1;
+        }
+
+        public static Model_Cart getOrderRequest(int userId)
+        {
+            try
+            {
+                HttpClient client = new();
+                HttpRequestMessage request = new(HttpMethod.Get, $"{apiBaseUrl}ui/get/cart/{userId}");
+                var response = client.Send(request);
+                response.EnsureSuccessStatusCode();
+                string result = response.Content.ReadAsStringAsync().Result;
+                Model_Cart cart = JsonSerializer.Deserialize<Model_Cart>(result);
+                return cart;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return null;
         }
     }
 }

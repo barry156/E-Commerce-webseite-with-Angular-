@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Store_PresentationLayer
 {
@@ -20,6 +8,9 @@ namespace Store_PresentationLayer
     /// </summary>
     public partial class Login_Page : UserControl
     {
+
+        MainWindow main;
+
         private enum kindOfLogin
         {
             REGISTER,
@@ -28,9 +19,10 @@ namespace Store_PresentationLayer
 
         private kindOfLogin kindOfLogic = kindOfLogin.LOGIN;
 
-        public Login_Page()
+        public Login_Page(MainWindow main)
         {
             InitializeComponent();
+            this.main = main;
         }
 
         private void btn_register_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -50,19 +42,21 @@ namespace Store_PresentationLayer
         {
             if (txt_email.Text.Length > 0 && txt_password.Text.Length > 0)
             {
-                bool success = false;
+                int id = -1;
                 switch (kindOfLogic)
                 {
                     case kindOfLogin.REGISTER:
-                        success = Requests.postRegister(txt_email.Text, txt_password.Text);
+                        id = Requests.postRegisterRequest(txt_email.Text, txt_password.Text);
                         break;
                     case kindOfLogin.LOGIN:
-                        success = Requests.postLogin(txt_email.Text, txt_password.Text);
+                        id = Requests.postLoginRequest(txt_email.Text, txt_password.Text);
                         break;
                 }
-                if (success)
+                if (id >= 0)
                 {
-
+                    main.EMail = txt_email.Text;
+                    main.UserId = id;
+                    main.switchToStore();
                 }
             }
         }
