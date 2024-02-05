@@ -1,8 +1,9 @@
-import { Component, DoCheck } from '@angular/core';
-import { ProductCart, ShoppingcartService } from '../contact/shoppingcart.service';
-import { Product } from '../model/product_model';
+import { Component, DoCheck, OnInit } from '@angular/core';
+import { ShoppingcartService } from '../contact/shoppingcart.service';
+import { Product, ProductInBackend, ShoppingCartResponse } from '../model/product_model';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { AuthentificationService } from '../authentification.service';
 
 
 
@@ -11,44 +12,103 @@ import { Router } from '@angular/router';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss']
 })
-export class CartComponent implements DoCheck {
+export class CartComponent implements OnInit {
   subTotal!: number;
   shipping = 10;
 
-  products: ProductCart[] = [];
+  products: ProductInBackend[] = [];
 
-  constructor(private shoppingCartService: ShoppingcartService, private router: Router) {}
+  constructor(private shoppingCartService: ShoppingcartService, private router: Router,
+    private authService: AuthentificationService) {}
 
-  ngDoCheck() {
-   this.products = this.shoppingCartService.getAllProducts();
-   this.shoppingCartService.getShoppingCartFromBackend()
-      .subscribe((data) => {
-       // this.products = data.products;
-        
-      });
-    this.subTotal = this.calculateTotal(this.products);
-    
-    
+  ngOnInit() {
+      this.shoppingCartService.getShoppingCartFromBackend().subscribe(
+        (response: any) => {
+          this.products = response?.products;
+          this.subTotal = response?.total_price;
+        },
+        (error) =>  {
+          console.error('Error:', error);
+        }
+      );
+       
+  }
+  //code for the backend
+  removeProductFromCardInBackend(product: Product) {
+    const userId = this.authService.idOfLoggedUser;
+    this.shoppingCartService.removeProductFromCardInBackend(product.id , userId).subscribe(
+      {
+        next: (response) => {
+          this.ngOnInit();
+         
+          console.log(response);
+          
+        },
+        error :(error) =>  {
+          console.error('Error :', error);
+         
+        }
+  
+      }
+
+    )
+
   }
 
-  remove(product: Product) {
-    this.shoppingCartService.removeProduct(product);
+  increaseProductQuantityFromBackend(product : Product)  {
+    const userId = this.authService.idOfLoggedUser;
+    this.shoppingCartService.addProductToCartInBackend(product.id , userId).subscribe(
+      {
+        next: (response) => {
+          this.ngOnInit();
+          
+          console.log(response);
+          
+        },
+        error :(error) =>  {
+          console.error('Error :', error);
+         
+        }
+  
+      }
+
+    )
+
+  }
+  decreaseProductQuantityFromBackend(product : Product)  {
+    const userId = this.authService.idOfLoggedUser;
+    this.shoppingCartService.decreaseProductQuantityFromBackend(product.id , userId).subscribe(
+      {
+        next: (response) => {
+          this.ngOnInit();
+          console.log(response);
+          
+        },
+        error:(error) =>  {
+          console.error('Error :', error);
+         
+        }
+  
+      }
+
+    )
+
   }
 
-  decreaseQuantity(product: ProductCart) {
-    if (product.cartQuantity && product.cartQuantity > 1) {
-      product.cartQuantity--;
+  decreaseQuantity(product: ProductInBackend) {
+    if (product.amount && product.amount > 1) {
+      product.amount--;
     }
   }
 
-  increaseQuantity(product: ProductCart) { 
-    if(product.cartQuantity ) {
-      product.cartQuantity++;
+  increaseQuantity(product: ProductInBackend) { 
+    if(product.amount ) {
+      product.amount++;
     }
   }
-  calculateTotal(productCart: ProductCart[]): number {
+  calculateTotal(productCart: ProductInBackend[]): number {
     return productCart.reduce((total, product) => {
-      return total + (product.price * (product.cartQuantity || 0));
+      return total + (product.price * (product.amount || 0));
     }, 0);
   }
 

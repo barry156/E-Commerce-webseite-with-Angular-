@@ -11,6 +11,57 @@ class Program
 {
     static void Main(string[] args)
     {
+        Console.WriteLine("Try to build Tables ...");
+        IDatabaseTableCreator creator = new DatabaseTableCreator();
+        if (creator.CreateTables() == 1)
+        {
+            Console.WriteLine("... Tables where created.");
+        }
+        else
+        {
+            Console.WriteLine("... Tables allready exist or Error, see console.");
+        }
+
+        //return;
+
+        IShopWriter shopWriterObj = new ShopWriter();
+        IShopReader shopReaderObj = new ShopReader();
+
+        Console.WriteLine("Register: 1");
+        int newCustId = shopWriterObj.Register("test123@mail.com", "123456pw");
+        Console.WriteLine($"Kunde mit ID: {newCustId} registriert.");
+
+        Console.WriteLine("Login: 1");
+        string loginAnswer = shopReaderObj.Login("test123@mail.com");
+        Console.WriteLine(loginAnswer);
+
+        Console.WriteLine("ReadAllArticles: 1");
+        string getAllProductsAnswer = shopReaderObj.ReadAllArticles();
+        Console.WriteLine(getAllProductsAnswer);
+
+        Console.WriteLine("ReadArticleByID: 1");
+        string getProductAnswer = shopReaderObj.ReadArticleByID(1);
+        Console.WriteLine(getProductAnswer);
+
+        Console.WriteLine("AddProductToCart: 1");
+        int articleAmount = shopWriterObj.AddProductToCart(newCustId, 1);
+        Console.WriteLine(articleAmount);
+        Console.WriteLine("AddProductToCart: 2");
+        articleAmount = shopWriterObj.AddProductToCart(newCustId, 1);
+        Console.WriteLine(articleAmount);
+        Console.WriteLine("AddProductToCart: 3");
+        articleAmount = shopWriterObj.AddProductToCart(newCustId, 2);
+        Console.WriteLine(articleAmount);
+
+        Console.WriteLine("RemoveProductFromCart: 1");
+        articleAmount = shopWriterObj.RemoveProductFromCart(newCustId, 1);
+        Console.WriteLine(articleAmount);
+
+        Console.WriteLine("getOrder: 1");
+        string orderFromCust = shopReaderObj.getOrder(newCustId);
+        Console.WriteLine(orderFromCust);
+
+        /*
         // Test Reader
         Console.WriteLine("Test Reader");
         // Setup
@@ -94,5 +145,6 @@ class Program
         int p = shopWriterObj.AddOrder(JsonConvert.SerializeObject(orderWriter, Formatting.Indented));
         int q = shopWriterObj.RemoveOrder(999);
         Console.WriteLine($"ADD: {p}, DELETE: {q}");
+        */
     }
 }

@@ -99,7 +99,7 @@ getProductById(productId: number): ProductInBackend {
 
 }
 getProductsFromBackend() {
-  const apiUrl = "http://127.0.0.1:7136/api/ui/get/products";
+  const apiUrl =  "http://127.0.0.1:7136/api/ui/get/products";
   return this.http.get <ProductInBackend[]>(apiUrl);
 
 

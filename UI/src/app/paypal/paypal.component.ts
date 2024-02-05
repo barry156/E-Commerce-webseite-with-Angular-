@@ -21,7 +21,5 @@ export class PaypalComponent implements OnInit{
       }
     );
   }
-  
-  
 
 }

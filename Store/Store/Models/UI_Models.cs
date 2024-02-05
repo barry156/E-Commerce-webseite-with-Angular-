@@ -1,4 +1,6 @@
-﻿namespace Store_ApplicationLayer.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Store_ApplicationLayer.Models
 {
     public class Model_Login
     {
@@ -9,21 +11,17 @@
 
     public class Model_Product
     {
-        public string name { get; set; }
         public int id { get; set; }
+        public string name { get; set; }
         public double price { get; set; }
         public string url { get; set; }
         public int amount { get; set; } = 0;
     }
 
-    public class Model_Cart
+    public class Model_UICart
     {
-        public int id { get; set; }
         public List<Model_Product> products { get; set; } = new();
-
         public double total_price { get; set; }
-
-        public Model_Cart
     }
 
     public class Model_Logic_Login
@@ -36,6 +34,23 @@
             this.id = id;
             this.answer = answer;
         }
+    }
+
+    public class Model_ProductRequest
+    {
+        public int product_id { set; get; }
+        public int user_id { set; get; }
+    }
+
+    public class Model_UserRequest
+    {
+        public string email { set; get; }
+    }
+
+    public class ProductFromOrder
+    {
+        public int id { set; get; }
+        public int amount { set; get; }
     }
 
     public enum Logic_Answer

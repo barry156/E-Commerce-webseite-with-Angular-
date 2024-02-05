@@ -139,6 +139,34 @@ namespace Store_ApplicationLayer.Controller
         }
 
         [HttpDelete]
+        [Route("api/ui/delete/product/all/{productId}-{userId}")]
+        public IActionResult DeleteWholeProductFromCartRequest([FromRoute] int productId, [FromRoute] int userId)
+        {
+            try
+            {
+                if (productId == null || userId == null)
+                {
+                    throw new Exception("userId or productId is null");
+                }
+                Console.WriteLine($"Delete product request, productId: {productId}, userId: {userId}");
+                int amount = Store_Logic.removeProductFromCart(userId, productId);
+                if (amount >= 0)
+                {
+                    for (int x = amount; x > 0; x--)
+                    {
+                        Store_Logic.removeProductFromCart(userId, productId);
+                    }
+                    return Ok(0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return BadRequest();
+        }
+
+        [HttpDelete]
         [Route("api/ui/delete/product/{productId}-{userId}")]
         public IActionResult DeleteProductFromCartRequest([FromRoute] int productId, [FromRoute] int userId)
         {
@@ -173,8 +201,7 @@ namespace Store_ApplicationLayer.Controller
                     throw new Exception("userId is null");
                 }
                 Console.WriteLine($"Get cart request, userId: {userId}");
-                Model_Cart cart = Store_Logic.getCartFromDB(userId);
-                cart.id = userId;
+                Model_UICart cart = Store_Logic.getCartFromDB(userId);
                 return Ok(JsonSerializer.Serialize(cart));
             }
             catch (Exception ex)
