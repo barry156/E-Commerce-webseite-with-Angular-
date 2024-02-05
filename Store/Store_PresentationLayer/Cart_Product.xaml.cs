@@ -17,7 +17,7 @@ namespace Store_PresentationLayer
             InitializeComponent();
             this.window = window;
             lbl_name.Content = name;
-            lbl_price.Content = price;
+            lbl_price.Content = price + " €";
             lbl_amount.Content = amount;
             this.productId = productId;
         }

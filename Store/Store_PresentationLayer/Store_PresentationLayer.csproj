@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\img\product-1.jpg" />
+    <None Remove="Assets\img\product-2.jpg" />
+    <None Remove="Assets\img\product-3.jpg" />
+    <None Remove="Assets\img\product-4.jpg" />
+    <None Remove="Assets\img\product-5.jpg" />
+    <None Remove="Assets\img\product-6.jpg" />
+    <None Remove="Assets\img\product-7.jpg" />
+    <None Remove="Assets\img\product-8.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Cart_Product.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -20,7 +31,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\img\" />
+    <Resource Include="Assets\img\product-1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\img\product-2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\img\product-3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\img\product-4.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\img\product-5.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\img\product-6.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\img\product-7.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\img\product-8.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

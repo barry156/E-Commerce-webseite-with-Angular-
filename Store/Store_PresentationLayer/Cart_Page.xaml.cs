@@ -21,14 +21,18 @@ namespace Store_PresentationLayer
 
         public void initFill(Model_Cart cart)
         {
-            foreach (Model_Product product in cart.products)
+            if (cart != null)
             {
-                if (product != null)
+                stackPanel.Children.Clear();
+                foreach (Model_Product product in cart.products)
                 {
-                    stackPanel.Children.Add(new Cart_Product(main, product.name, product.price.ToString(), product.amount, product.id));
+                    if (product != null)
+                    {
+                        stackPanel.Children.Add(new Cart_Product(main, product.name, product.price.ToString(), product.amount, product.id));
+                    }
                 }
+                lbl_wholePrice.Content = $"Insgesamt: {cart.total_price}€";
             }
-            lbl_wholePrice.Content = $"Insgesamt: {cart.total_price}€";
         }
     }
 }

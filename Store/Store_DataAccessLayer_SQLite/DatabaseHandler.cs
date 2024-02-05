@@ -185,7 +185,7 @@ namespace Store_DataAccessLayer_SQLite
                         {
                             if (entity.product_id == productId)
                             {
-                                if (amount <= 1)
+                                if (entity.amount <= 1)
                                 {
                                     removeEntity = entity;
                                 }
@@ -210,14 +210,14 @@ namespace Store_DataAccessLayer_SQLite
             return -1;
         }
 
-        public Order getOrderFromDB(int id)
+        public List<OrderEntity> getOrderFromDB(int id)
         {
             try
             {
                 using (var db = dbFactory.Open())
                 {
                     Order order = db.Select<Order>(x => x.user_id == id).FirstOrDefault();
-                    return order;
+                    return order.order_entitys;
                 }
             }
             catch (Exception ex)

@@ -144,7 +144,7 @@ namespace Store_DataAccessLayer_SQLite
                 JsonDocument jsonDocument = JsonDocument.Parse(json);
                 if (jsonDocument.RootElement.EnumerateObject().Count() == 2)
                 {
-                    JsonProperty propertyUser = jsonDocument.RootElement.EnumerateObject().First();
+                    JsonProperty propertyUser = jsonDocument.RootElement.EnumerateObject().Last();
                     if (propertyUser.Value.ValueKind == JsonValueKind.Number)
                     {
                         userId = propertyUser.Value.GetInt32();
@@ -173,10 +173,10 @@ namespace Store_DataAccessLayer_SQLite
         {
             try
             {
-                Order order = new();
+                List<OrderEntity> orders = new();
                 int id = JsonSerializer.Deserialize<int>(json);
-                order = DatabaseHandler.Instance.getOrderFromDB(id);
-                return JsonSerializer.Serialize(order);
+                orders = DatabaseHandler.Instance.getOrderFromDB(id);
+                return JsonSerializer.Serialize(orders);
             }
             catch (Exception ex)
             {

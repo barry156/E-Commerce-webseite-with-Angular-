@@ -20,8 +20,7 @@ namespace Store_PresentationLayer
         public MainWindow()
         {
             InitializeComponent();
-            Login_Page loginPage = new(this);
-            content_control.Content = loginPage;
+            EMail = string.Empty;
         }
 
         public void switchToStore()
