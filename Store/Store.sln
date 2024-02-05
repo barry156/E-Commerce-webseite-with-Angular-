@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tester", "Tester\Tester.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store_DataAccessLayer", "Store_DataAccessLayer\Store_DataAccessLayer.csproj", "{41219632-B64D-4E2C-B5E8-A9575C3FC282}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store_PresentationLayer", "Store_PresentationLayer\Store_PresentationLayer.csproj", "{D64847AC-2B56-4C14-A65C-489C4F2ED867}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer_Interface", "DataAccessLayer_Interface\DataAccessLayer_Interface.csproj", "{C2577A52-836C-4401-9055-CFF1BFEE3E6F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store_DataAccessLayer_SQLite", "Store_DataAccessLayer_SQLite\Store_DataAccessLayer_SQLite.csproj", "{C4D238C9-FF5E-4A10-8321-5528E86581F2}"
@@ -31,6 +33,10 @@ Global
 		{41219632-B64D-4E2C-B5E8-A9575C3FC282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41219632-B64D-4E2C-B5E8-A9575C3FC282}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41219632-B64D-4E2C-B5E8-A9575C3FC282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D64847AC-2B56-4C14-A65C-489C4F2ED867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D64847AC-2B56-4C14-A65C-489C4F2ED867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D64847AC-2B56-4C14-A65C-489C4F2ED867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D64847AC-2B56-4C14-A65C-489C4F2ED867}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C2577A52-836C-4401-9055-CFF1BFEE3E6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C2577A52-836C-4401-9055-CFF1BFEE3E6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2577A52-836C-4401-9055-CFF1BFEE3E6F}.Release|Any CPU.ActiveCfg = Release|Any CPU

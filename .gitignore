@@ -5,8 +5,14 @@ Store/Tester/bin
 Store/Tester/obj
 Store/Store_DataAccessLayer/bin
 Store/Store_DataAccessLayer/obj
+Store/Store_PresentationLayer/obj
+Store/Store_PresentationLayer/bin
 Store/Store_DataAccessLayer_Bib_PostgreSQL/bin
 Store/Store_DataAccessLayer_Bib_PostgreSQL/obj
+Store/DataAccessLayer_Interface/bin
+Store/DataAccessLayer_Interface/obj
+Store/Store_DataAccessLayer_SQLite/obj
+Store/Store_DataAccessLayer_SQLite/bin
 
 # Compiled output
 /dist
@@ -48,7 +54,3 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-Store/DataAccessLayer_Interface/bin
-Store/DataAccessLayer_Interface/obj
-Store/Store_DataAccessLayer_SQLite/obj
-Store/Store_DataAccessLayer_SQLite/bin
