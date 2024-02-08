@@ -1,40 +1,35 @@
-# ProjetAngular
-Welcome to this dynamic web application, generated with Angular CLI version 15.0.5. This project is dedicated to creating a user-friendly platform for a travel agency. Our mission is to provide tourists with the means to discover incredible destinations around the world, conveniently categorized by continents.
-## Getting Started
+##Angular E-Commerce-Projekt
 
-If you're new to Angular or looking to expand your skills, Projet2 serves as an excellent learning resource. To begin your journey, clone this repository and explore the codebase.
+Dieses Angular-Projekt dient dazu, Entwicklern, insbesondere Anfängern, beizubringen, wie Angular mit Backend-Systemen kommuniziert, die in C# entwickelt wurden. Es zeigt auch, wie Sie eine Warenkorb-Funktionalität implementieren und eine PayPal-Zahlungsumgebung in Ihr Angular-Projekt integrieren können.
+Funktionalitäten
 
-## Development server
+    Implementierung eines Warenkorbs: Dieses Projekt bietet eine vollständige Anleitung zur Implementierung eines Warenkorbs in einem Angular-E-Commerce-System. Sie lernen, wie Sie Produkte hinzufügen, entfernen und die Gesamtmenge berechnen können.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+    Integration von PayPal-Zahlungen: Neben dem Warenkorb lernen Sie auch, wie Sie PayPal als Zahlungsmethode in Ihrem Angular-Projekt einrichten können. Dies beinhaltet die Integration der PayPal-API und die Verarbeitung von Zahlungen über die Plattform.
 
-## Code scaffolding
+##Voraussetzungen
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Bevor Sie mit diesem Projekt beginnen, stellen Sie sicher, dass Sie Folgendes installiert haben:
 
-## Build
+    Node.js und npm
+    Angular CLI
+    Visual Studio oder eine andere IDE für die Entwicklung in C#
+    Ein Backend-System, das in C# entwickelt wurde und die erforderlichen APIs bereitstellt
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+##Installation
 
-## Running unit tests
+    Klonen Sie dieses Repository auf Ihren lokalen Computer.
+    Navigieren Sie in das Verzeichnis des Projekts und installieren Sie die Abhängigkeiten mit dem Befehl npm install.
+    Folgen Sie den Anweisungen in der Backend-Dokumentation, um sicherzustellen, dass Ihr C#-Backend ordnungsgemäß eingerichtet ist und die erforderlichen APIs bereitstellt.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+##Verwendung
 
-## Running end-to-end tests
+    Starten Sie das Angular-Projekt mit dem Befehl ng serve.
+    Überprüfen Sie, ob Ihr C#-Backend ebenfalls läuft und ordnungsgemäß auf Anfragen reagiert.
+    Navigieren Sie in Ihrem Browser zur angezeigten URL (standardmäßig http://localhost:4200).
+    Beginnen Sie mit der Interaktion mit der Anwendung, fügen Sie Produkte zum Warenkorb hinzu und überprüfen Sie die PayPal-Zahlungsfunktionalität.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-What I've Learned During This Project
+##Contributing
 
-Throughout this project, I've had the opportunity to gain valuable insights and skills in various areas, including:
-
-    *TypeScript: I've developed a strong command of TypeScript, a fundamental language in Angular development, and used it extensively to build this application.
-
-    *Services: I've learned how to create and utilize services effectively, ensuring that data management is organized and maintainable.
-
-    *Pipes: I've become proficient in using Angular pipes to transform and present data, enhancing the overall user experience and making data manipulation more intuitive.
-
-This project has been a valuable learning experience, equipping me with the skills and knowledge needed to create dynamic web applications using Angular.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Wir freuen uns über Beiträge von Entwicklern jeder Erfahrungsstufe. Bitte erstellen Sie einen Pull-Request mit Ihren Änderungen, und wir werden sie prüfen.
+Lizenz
